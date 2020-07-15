@@ -38,7 +38,7 @@ export interface IAuthService {
 
   logout();
 
-  ping(): Promise<IUser>;
+  ping(): Promise<IUser|null>;
 
   register(profile: IRegisterCredential): Promise<boolean>;
 
