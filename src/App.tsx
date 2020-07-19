@@ -1,6 +1,10 @@
 import React from 'react';
 import logo from './logo.svg';
+import {createBrowserHistory} from "history";
+import {IAuthRedirectState} from "./types/IAuth";
 import './App.css';
+
+// export const history = createBrowserHistory<IAuthRedirectState>();
 
 function App() {
   return (
