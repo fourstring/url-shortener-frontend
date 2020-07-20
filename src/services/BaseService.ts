@@ -4,6 +4,7 @@ import {client} from "../utils/network";
 import config from "../config";
 import {mockClient} from "../mocks/mockClient";
 import {IBaseService, IPagedData, IRequestFilterOptions} from "./ServiceInterfaces";
+import {ILink} from "../types/ILink";
 let urlJoin = require('url-join'); // import url-join
 
 export class BaseService <T, InputT = T> implements IBaseService<T, InputT> {

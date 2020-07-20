@@ -1,8 +1,8 @@
-import {IUserInfo} from "./IUserInfo";
+import {IUser} from "./IUser";
 
 export interface ILoginResult {
     id: number;
-    user: IUserInfo;
+    user: IUser;
     accessToken: string;
     csrfToken: string;
 }

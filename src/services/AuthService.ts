@@ -3,7 +3,7 @@ import config from "../config";
 import {mockClient} from "../mocks/mockClient";
 import {client} from "../utils/network";
 import {ILoginCredential, IRegisterCredential,ILoginResult} from "../types/IAuth";
-import { IUserInfo } from "../types/IUserInfo";
+import { IUser } from "../types/IUser";
 
 export class AuthService {
     client: AxiosInstance;
@@ -16,7 +16,7 @@ export class AuthService {
         }
     }
 
-    async login(cred: ILoginCredential): Promise<IUserInfo|null> {
+    async login(cred: ILoginCredential): Promise<IUser|null> {
         try {
             let result = await this.client.post<ILoginResult>('/auth/login', cred);
             if (result.status >= 200 && result.status <= 299) {
@@ -40,7 +40,7 @@ export class AuthService {
         return true;
     }
 
-    async ping(): Promise<IUserInfo|null> {
+    async ping(): Promise<IUser|null> {
         try {
             let result = await this.client.get<ILoginResult>('/auth/ping');
             if (result.status !== 403) {

@@ -1,8 +1,8 @@
 import React from "react";
-import {IUserInfo} from "../types/IUserInfo";
+import {IUser} from "../types/IUser";
 
 export interface UserContextType {
-    user: IUserInfo | null;
+    user: IUser | null;
     setUser: any;
 }
 
