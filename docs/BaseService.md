@@ -16,7 +16,7 @@ export interface IBaseService<T, InputT = T> {
   endpoint: string;
   client: AxiosInstance;
 
-  constructor(client?:AxiosClient);
+  constructor(client?:AxiosInstance);
 
   get(id: number): Promise<T>;
   
@@ -40,7 +40,7 @@ export interface IBaseService<T, InputT = T> {
 * client: 该Service发起请求时所使用的Axios client。
 ### 错误处理
 Service仅封装数据获取逻辑，所以我们将错误处理逻辑留到更高层的抽象（hooks）或调用层完成。当后端返回4xx/5xx状态码时，Axios会抛出AxiosError异常，可以捕获该异常进行处理。
-### constructor(client?:AxiosClient);
+### constructor(client?:AxiosInstance);
 若传入`client`参数，则使用所传入的对象，否则使用全局定义的普通`client`。
 
 如此设计主要是为了单元测试之便利，因为测试不同的代码所需的mock响应定义可能不同，因此使用一个全局的mockClient是一个灵活度较低的设计。此种设计下在不同的单元测试中可根据测试需求定义不同的mock client传入，更便于测试代码的组织。
