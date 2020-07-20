@@ -32,7 +32,7 @@ AuthService接口定义如下：
 export interface IAuthService {
   client: AxiosInstance;
 
-  constructor(mock:boolean=false);
+  constructor(client?:AxiosInstance);
 
   login(cred: ILoginCredential): Promise<IUser>;
 
@@ -52,7 +52,7 @@ export interface IAuthService {
 ## 接口行为
 ### 成员变量
 参考BaseService文档。
-### constructor(mock:boolean=false);
+### constructor(client?:AxiosInstance);
 参考BaseService文档。
 ### 错误处理
 本类接口定义中某些方法应捕获AxiosError异常，某些方法不捕获异常。对于不捕获异常的方法，其异常由调用层处理。对于捕获异常的方法，应该检查该异常是否满足AxiosError接口（如检查[`isAxiosError`成员](https://github.com/axios/axios/pull/1419/files) ），而后再检查其状态码（`code`）是否为该API接口规范中已定义的可能错误返回，以上两个条件任一不满足，则重新抛出该异常（如后端返回500错误等），若二者均满足则执行行为定义中的错误处理操作。
