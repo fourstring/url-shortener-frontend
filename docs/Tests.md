@@ -92,7 +92,7 @@ BaseService构造函数接受一个client参数，允许用户代码传入不同
 describe("Test normal flow of AuthService",async ()=>{
   let client=axios.create();
   let mock=new MockAdapter(client);
-  mock.onPost('/auth/login'.reply(200);
+  mock.onPost('/auth/login').reply(200);
   let authService=new AuthService(client);
   // ...
 });
@@ -100,7 +100,7 @@ describe("Test normal flow of AuthService",async ()=>{
 describe("Test unexpected exception handling of AuthService",async ()=>{
   let client=axios.create();
   let mock=new MockAdapter(client);
-  mock.onPost('/auth/login'.reply(500);
+  mock.onPost('/auth/login').reply(500);
   let authService=new AuthService(client);
   // ...
 })
