@@ -105,3 +105,5 @@ describe("Test unexpected exception handling of AuthService",async ()=>{
   // ...
 })
 ```
+### 如何测试localStorage
+`localStorage`属于浏览器API的一部分，在Node环境下并不可用，但我们可以转而使用该模块：https://github.com/clarkbw/jest-localstorage-mock 。它提供了一个`localStorage`的mock实现，且具有正常的功能。
