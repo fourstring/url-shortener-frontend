@@ -83,3 +83,25 @@ act(()=>{
 `axios-mock-adapter`只提供了基本的模拟服务端返回数据、延时等功能。对于返回的mock数据如何生成并未提供任何支持，这其实是不太合适的，因为若要完整地mock测试前端代码，就需要mock server与一个RESTful API有大致相似行为，而只使用`axios-mock-adapter`，等于要求开发者自行实现RESTful的CRUD逻辑，这是非常枯燥且不必要的。
 
 我们可以尝试使用https://github.com/mswjs/msw 这个库进行mock，当然也可以直接在mock-adapter中开发简单逻辑。
+
+### 如何mock测试Service的不同逻辑
+不同的单元测试对mock的需求可能不同，如有的是测试Service是否能正常获取数据，有的是测试Service的错误处理逻辑，因此它们需要不同的mock响应。
+
+BaseService构造函数接受一个client参数，允许用户代码传入不同的client供其使用。因此，对于不同的单元测试可以分别定义不同的client，随后分别传入，以测试不同的逻辑。如下：
+```typescript
+describe("Test normal flow of AuthService",async ()=>{
+  let client=axios.create();
+  let mock=new MockAdapter(client);
+  mock.onPost('/auth/login'.reply(200);
+  let authService=new AuthService(client);
+  // ...
+});
+
+describe("Test unexpected exception handling of AuthService",async ()=>{
+  let client=axios.create();
+  let mock=new MockAdapter(client);
+  mock.onPost('/auth/login'.reply(500);
+  let authService=new AuthService(client);
+  // ...
+})
+```

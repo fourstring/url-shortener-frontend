@@ -16,7 +16,7 @@ export interface IBaseService<T, InputT = T> {
   endpoint: string;
   client: AxiosInstance;
 
-  constructor(mock:boolean=false);
+  constructor(client?:AxiosClient);
 
   get(id: number): Promise<T>;
   
@@ -40,14 +40,10 @@ export interface IBaseService<T, InputT = T> {
 * client: 该Service发起请求时所使用的Axios client。
 ### 错误处理
 Service仅封装数据获取逻辑，所以我们将错误处理逻辑留到更高层的抽象（hooks）或调用层完成。当后端返回4xx/5xx状态码时，Axios会抛出AxiosError异常，可以捕获该异常进行处理。
-### constructor(mock:boolean=false);
-主要行为为根据参数和配置文件设置`this.client`为普通axios client或mock client，以便于测试或生产环境使用。
+### constructor(client?:AxiosClient);
+若传入`client`参数，则使用所传入的对象，否则使用全局定义的普通`client`。
 
-参数和配置文件的优先级如下：
-* 若`mock`和`config.globalMock`任一为true，则使用mock client
-* 若二者均为false，使用普通client。
-
-如此定义主要是为了便于单元测试，将`globalMock`设为true便于批量单元测试，仅将某个Service的`mock`设为true便于单独测试该Service。
+如此设计主要是为了单元测试之便利，因为测试不同的代码所需的mock响应定义可能不同，因此使用一个全局的mockClient是一个灵活度较低的设计。此种设计下在不同的单元测试中可根据测试需求定义不同的mock client传入，更便于测试代码的组织。
 ### get(id: number): Promise\<T\>;
 GET请求`config.baseURL/endpoint/${id}`，并返回后端所返回的数据。如：请求`http://localhost:8080/links/1` ,即表示获取id为1的Link数据。
 
