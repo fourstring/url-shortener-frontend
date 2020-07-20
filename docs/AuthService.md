@@ -57,13 +57,13 @@ export interface IAuthService {
 ### 错误处理
 本类接口定义中某些方法应捕获AxiosError异常，某些方法不捕获异常。对于不捕获异常的方法，其异常由调用层处理。对于捕获异常的方法，应该检查该异常是否满足AxiosError接口（如检查[`isAxiosError`成员](https://github.com/axios/axios/pull/1419/files) ），而后再检查其状态码（`code`）是否为该API接口规范中已定义的可能错误返回，以上两个条件任一不满足，则重新抛出该异常（如后端返回500错误等），若二者均满足则执行行为定义中的错误处理操作。
 ### login(cred: ILoginCredential): Promise\<IUser>;
-POST请求`/auth/login`接口，数据为用户名和密码。若用户名密码错误，axios将引发AxiosError异常，该异常由调用层处理。若用户名密码正确，后端将返回`UserInfo`，`accessToken`，`csrfToken`等一系列数据，该接口应当将`accessToken`与`csrfToken`存入LocalStorage中，以供Interceptor自动注入使用，详见Interceptor文档。随后，将`UserInfo`对象返回，作为方法的返回值。
+POST请求`/auth/login`接口，数据为用户名和密码。若用户名密码错误，axios将引发AxiosError异常，该异常由调用层处理。若用户名密码正确，后端将返回`User`，`accessToken`，`csrfToken`等一系列数据，该接口应当将`accessToken`与`csrfToken`存入LocalStorage中，以供Interceptor自动注入使用，详见Interceptor文档。随后，将`User`对象返回，作为方法的返回值。
 
 ### logout();
 GET请求`/auth/logout`接口，随后不论接口返回值如何，将LocalStorage中的`accessToken`、`csrfToken`清除。
 
 ### ping(): Promise\<IUser|null>;
-GET请求`/auth/ping`接口，该接口使用JWT认证，用于返回当前登陆用户的`UserInfo`数据。若接口成功返回，则将所返回的`UserInfo`数据作为返回值，若接口返回403,本方法应当捕获AxiosError，并返回null。
+GET请求`/auth/ping`接口，该接口使用JWT认证，用于返回当前登陆用户的`User`数据。若接口成功返回，则将所返回的`User`数据作为返回值，若接口返回403,本方法应当捕获AxiosError，并返回null。
 
 ### register(profile: IRegisterCredential): Promise\<boolean>;
 POST请求`/auth/register`接口，数据为用户名、密码、邮箱。若用户名或邮箱重复，那么接口返回400,方法捕获AxiosError并返回false表明注册失败；否则返回true表明注册成功。
