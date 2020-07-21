@@ -101,11 +101,9 @@ export function useEntity<T, InputT = T>(id: number, service: BaseService<T, Inp
             let result = await service.get(id);
             dispatch({ type: EntityStateActionType.SET_DATA, data: result });
         };
-        try {
-            fetchData();
-        } catch (e) {
-            dispatch({ type: EntityStateActionType.ERROR, error: e });
-        }
+        fetchData().catch( error=>{
+            dispatch({ type: EntityStateActionType.ERROR, error: error });
+        })
     }, [id, service]);
 
     function useMutate({id, data, method, mutator}: MutateInput<T, InputT>): void {

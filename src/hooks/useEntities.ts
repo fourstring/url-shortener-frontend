@@ -151,11 +151,9 @@ export function useEntities<T extends IEntity, InputT = T>(service: BaseService<
                     page: pagedData
                 });
             };
-            try {
-                fetchEntities();
-            } catch (e) {
+            fetchEntities().catch((e)=>{
                 dispatch({type: EntitiesStateActionType.ERROR, error: e});
-            }
+            })
         }
     }, [service, filterOption]);
 
