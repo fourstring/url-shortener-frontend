@@ -1,5 +1,4 @@
 import {AxiosInstance} from "axios";
-import MockAdapter from "axios-mock-adapter";
 
 export interface IPagedData<T> {
     count:number;

@@ -42,7 +42,7 @@
     "history": "^5.0.0",
     "html-webpack-plugin": "4.0.0-beta.11",
     "identity-obj-proxy": "3.0.0",
-    "jest": "24.9.0",
+    "jest": "^26.1.0",
     "jest-environment-jsdom-fourteen": "1.0.1",
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.2",
@@ -150,5 +150,9 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "jest-localstorage-mock": "^2.4.3",
+    "msw": "^0.19.5"
   }
 }
