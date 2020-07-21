@@ -9,7 +9,11 @@ let client = axios.create();
 let mock = new MockAdapter(client);
 
 beforeEach(() =>{
-    jest.resetAllMocks();
+    // @ts-ignore
+    localStorage.setItem.mockClear();
+    // @ts-ignore
+    localStorage.removeItem.mockClear();
+    localStorage.clear();
 })
 /*
 * 检测 AuthService login 返回值
@@ -31,6 +35,8 @@ describe('AuthService login test',() => {
         let authService = new AuthService(client);
         await expect(authService.login(request)).resolves.toEqual(user);
         expect(localStorage.setItem).toHaveBeenCalledTimes(2);
+        expect(localStorage.getItem('access_token')).toBe("justTestToken");
+        expect(localStorage.getItem('csrf_token')).toBe("justTestToken");
     });
 
     /*
@@ -80,6 +86,8 @@ describe('AuthService logout test',() => {
         let authService = new AuthService(client);
         await expect(authService.logout()).resolves.toEqual(true);
         expect(localStorage.removeItem).toHaveBeenCalledTimes(2);
+        expect(localStorage.getItem('access_token')).toBeNull();
+        expect(localStorage.getItem('csrf_token')).toBeNull();
     });
 
     /*
@@ -189,7 +197,7 @@ describe('AuthService ping test',() => {
 * @author wfn
 */
 describe('AuthService refresh test',() => {
-    const result = {"accessToken": "string"}
+    const result = {"accessToken": "justTestToken"}
 
     /*
     * 检测 AuthService refresh 正常状态下的返回值
@@ -201,6 +209,7 @@ describe('AuthService refresh test',() => {
         let authService = new AuthService(client);
         await expect(authService.refresh()).resolves.toEqual(true);
         expect(localStorage.setItem).toHaveBeenCalledTimes(1);
+        expect(localStorage.getItem('access_token')).toBe("justTestToken");
     });
 
     it('Test fail flow of AuthService refresh', async () => {
