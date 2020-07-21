@@ -1,4 +1,4 @@
-import { IUserInfo } from "./IUserInfo";
+import {IUser} from "./IUser";
 
 export interface ILinkInput {
     user:number;
@@ -6,7 +6,7 @@ export interface ILinkInput {
 
 export interface ILink{
     id: number;
-    user:IUserInfo;
+    user:IUser;
     linkKey: string;
     href: string;
     createAt: string;

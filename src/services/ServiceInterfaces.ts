@@ -1,32 +1,28 @@
-import {AxiosInstance} from "axios";
+import {AxiosInstance} from 'axios';
+import {IPagedData} from '../types/IHAL'
 import MockAdapter from "axios-mock-adapter";
-import {IPagedData} from "../types/IHAL";
 
 export interface IRequestFilterOptions<T> {
-  page:number;
-  size:number;
-  fields:(keyof T)[];
-  
-  [name: string]:any;
+    page: number;
+    size: number;
+    fields:(keyof T)[];
+
+    [name: string]:any;
 }
 
-export interface EntityService<T, InputT = T, R = T> {
-  endpoint: string;
-  resourceName: string;
-  client: AxiosInstance | MockAdapter;
+export interface IBaseService<T, InputT = T> {
+    endpoint: string; //该Service所要请求的 RESTFUL API的路径
+    client: AxiosInstance | MockAdapter; //该Service发起请求时所使用的 Axios client
 
-  transformResource(resource: R): T;
+    get(id: number): Promise<T>;
 
-  get(id: number, filterOption?: IRequestFilterOptions<T>): Promise<T>;
+    getAll(filterOption?: IRequestFilterOptions<T>): Promise<IPagedData<T>>;
 
-  // TODO: Add paginator support( Pagination schema is unable to determine now ).
-  getAll(filterOption?: IRequestFilterOptions<T>): Promise<IPagedData<T>>;
+    post(data: InputT): Promise<T>;
 
-  post(data: InputT): Promise<T>;
+    put(id: number, data: InputT): Promise<T>;
 
-  put(id: number, data: InputT): Promise<T>;
+    patch(id: number, data: Partial<InputT>): Promise<T>;
 
-  patch(id: number, data: Partial<InputT>): Promise<T>;
-
-  delete(id: number): Promise<boolean>;
+    delete(id: number): Promise<boolean>;
 }

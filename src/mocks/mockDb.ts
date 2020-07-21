@@ -1,24 +1,21 @@
-import {IUserInfo} from "../types/IUserInfo";
+import {IUser} from "../types/IUser";
 import {ILink} from "../types/ILink";
+
 function fillDb<T extends any>(db: Map<number, T>, key: string = "id") {
   return (value: T) => db.set(value[key] as number, value);
 }
 
-let users: IUserInfo[] = [
-  {id: '1', username: 'test1', email: 'test@test.com'},
-  {id: '2', username: 'test2', email: 'test@test2.com'},
-  {id: '3', username: 'test3', email: 'test@test3.com'},
-  {id: '4', username: 'admin', email: 'admin@test.com'}
+let user: IUser[] = [
+  {id: 1, username: 'test1', email: 'test@test.com'},
+  {id: 2, username: 'test2', email: 'test@test2.com'},
+  {id: 3, username: 'test3', email: 'test@test3.com'},
+  {id: 4, username: 'admin', email: 'admin@test.com'}
 ];
 
-let links: ILink[] = [
+let link: ILink[] = [
     {
         id: 1,
-        user:{
-          id:'1',
-          username:'test1',
-          email:'test@test.com'
-        },
+        user:user[0],
         linkKey: "https://sourl.cn/A7PKCQ",
         href:"https://nimo.sjtu.edu.cn/",
         createAt:"2020-07-20",
@@ -26,11 +23,7 @@ let links: ILink[] = [
     },
     {
         id: 2,
-        user:{
-          id:'1',
-          username:'test1',
-          email:'test@test.com'
-        },
+        user:user[0],
         linkKey: "https://sourl.cn/NNr96e",
         href:"https://github.com/fourstring/url-shortener-frontend",
         createAt:"2020-07-20",
@@ -38,13 +31,15 @@ let links: ILink[] = [
     },
 ];
 
-let userDb = new Map<number, IUserInfo>();
-users.forEach(fillDb<IUserInfo>(userDb));
+let userDb = new Map<number, IUser>();
+user.forEach(fillDb<IUser>(userDb));
 
 let linkDb = new Map<number, ILink>();
-links.forEach(fillDb<ILink>(linkDb));
+link.forEach(fillDb<ILink>(linkDb));
 
 export {
   userDb,
-  linkDb
+  linkDb,
+  user,
+  link
 }

@@ -1,99 +1,87 @@
 import {AxiosInstance} from "axios";
-import config from "../config";
-import {mockClient} from "../mocks/mockClient";
-import {client} from "../utils/network";
 import {ILoginCredential, IRegisterCredential,ILoginResult} from "../types/IAuth";
-import { IUserInfo } from "../types/IUserInfo";
+import {IUser} from "../types/IUser";
+import {client} from "../utils/network";
 
 export class AuthService {
-  client: AxiosInstance;
+    client: AxiosInstance;
 
-  constructor() {
-    if (config.globalMock) {
-      this.client = mockClient;
-    } else {
-      this.client = client;
+    constructor(Client ?: AxiosInstance) {
+        this.client = Client ? Client:client;
     }
-  }
 
-  async login(cred: ILoginCredential): Promise<IUserInfo|null> {
-    try {
-      let result = await this.client.post<ILoginResult>('/auth/login', cred);
-      if (result.status >= 200 && result.status <= 299) {
-        localStorage.setItem('csrf_token', result.data.csrfToken); // Set csrfToken localStorage for further requests.
-        localStorage.setItem('access_Token', result.data.accessToken);
-        return result.data.user
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  async logout() {
-    try {
-      await this.client.get('/logout');
-    } catch (e) {
-      localStorage.removeItem('csrf_token'); // Clear csrfToken stored.
-      localStorage.removeItem('access_Token');
-    }
-    return true;
-  }
-
-  async ping(): Promise<IUserInfo|null> {
-    try {
-      let result = await this.client.get<ILoginResult>('/auth/ping');
-      if (result.status !== 403) {
-        localStorage.setItem('csrf_token', result.data.csrfToken); // Set csrfToken localStorage for further requests.
-        localStorage.setItem('access_Token', result.data.accessToken);
-        return  result.data.user
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  async register(profile: IRegisterCredential): Promise<boolean> {
-    try {
-      let result = await this.client.post('/auth/register', profile);
-      return result.status !== 400;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  }
-
-  async checkExists(username?: string, email?:string):Promise<boolean>{
-    try {
-      let result = await this.client.get('/auth/exist', {
-        params: {
-          username,
-          email
+    async login(cred: ILoginCredential): Promise<IUser> {
+        try {
+            let result = await this.client.post<ILoginResult>('/auth/login', cred);
+            localStorage.setItem('access_token', result.data.accessToken);
+            localStorage.setItem('csrf_token', result.data.csrfToken);
+            return result.data.user;
+        } catch (e) {
+            throw e;
         }
-      });
-      return result.status !== 403;
-    } catch (e) {
-      console.log(e);
-      return false;
     }
-  }
 
-  //TODO
-  async refresh(): Promise<boolean>{
+    async logout() {
+        try {
+            let result =  await this.client.get('/auth/logout');
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('csrf_token');
+            return result.status === 200;
+        }catch (e) {
+            throw e;
+        }
+    }
 
-    try{
-      let result = await this.client.get('/auth/refresh');
-      localStorage.setItem('access_Token', result.data.accessToken);
-      return true;
+    async ping(): Promise<IUser|null> {
+        try {
+            let result = await this.client.get<IUser>('/auth/ping');
+            return result.data;
+        } catch (e) {
+            if(!(e.isAxiosError && e.response.status === 403)){
+                throw e;
+            }
+        }
+        return null;
     }
-    catch(e){
-      console.log(e);
-      // 需要重新登录
-      return false;
+
+    async register(profile: IRegisterCredential): Promise<boolean> {
+        try {
+            let result = await this.client.post('/auth/register', profile);
+            return result.status === 200;
+        } catch (e) {
+            if(e.isAxiosError && e.response.status === 400){
+                return false;
+            }
+            throw e;
+        }
     }
-    
-  }
+
+    async checkExists(username?: string, email?: string): Promise<boolean> {
+        try {
+            let result = await this.client.post('/auth/exist', {
+                username: username, email: email
+            });
+            return result.status === 200;
+        } catch (e) {
+            if(e.isAxiosError && e.response.status === 403){
+                return false;
+            }
+            throw e;
+        }
+    }
+
+    async refresh(): Promise<boolean>{
+        try {
+            let result = await this.client.get('/auth/refresh');
+            localStorage.setItem('access_token', result.data.accessToken);
+            return true;
+        } catch (e) {
+            if(e.isAxiosError && e.response.status === 403){
+                return false;
+            }
+            throw e;
+        }
+    }
 }
 
 export const authService = new AuthService();
