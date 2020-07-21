@@ -1,15 +1,13 @@
 import {IEntity} from "./IEntity";
+import {IUser} from "./IUser";
 
 export interface ILinkInput {
-    user:number;
+    user: number;
     href: string;
 }
 
 export interface ILink extends IEntity{
-    user:{
-        id:number;
-        username:string;
-    }
+    user: IUser;
     linkKey: string;
     href: string;
 }

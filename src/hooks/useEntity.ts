@@ -1,9 +1,6 @@
 import {BaseService} from "../services/BaseService";
 import {Dispatch, Reducer, useEffect, useReducer} from "react";
 import {AxiosError} from "axios";
-import {IRequestFilterOptions} from "../services/ServiceInterfaces";
-import {usePrevious} from "./usePrevious";
-import _ from "lodash";
 
 export enum MutateMethods {
     POST,
@@ -18,7 +15,6 @@ export interface MutateInput<T, InputT> {
     method?: MutateMethods;
     mutator?: (dispatch: Dispatch<EntityStateAction<T>>) => Promise<void>;
 }
-
 
 export interface useEntityState<T> {
     data: T | null;
@@ -96,23 +92,21 @@ function entityStateReducer<T>(state: useEntityState<T>, action: EntityStateActi
     return newState;
 }
 
-export function useEntity<T, InputT = T>(id: number, service: BaseService<T, InputT>, filterOption?: IRequestFilterOptions): useEntityResult<T, InputT> {
+export function useEntity<T, InputT = T>(id: number, service: BaseService<T, InputT>): useEntityResult<T, InputT> {
     const [state, dispatch] = useReducer<Reducer<useEntityState<T>, EntityStateAction<T>>>(entityStateReducer, initEntityState<T>());
-    const previousFilter = usePrevious<IRequestFilterOptions | undefined>(filterOption);
+
     useEffect(() => {
-        if (!(filterOption && _.isEqual(previousFilter, filterOption))) {
-            let fetchData: () => Promise<void> = async () => {
-                dispatch({type: EntityStateActionType.LOADING});
-                let result = await service.get(id, filterOption);
-                dispatch({type: EntityStateActionType.SET_DATA, data: result});
-            };
-            try {
-                fetchData();
-            } catch (e) {
-                dispatch({type: EntityStateActionType.ERROR, error: e});
-            }
+        let fetchData: () => Promise<void> = async () => {
+            dispatch({ type: EntityStateActionType.LOADING });
+            let result = await service.get(id);
+            dispatch({ type: EntityStateActionType.SET_DATA, data: result });
+        };
+        try {
+            fetchData();
+        } catch (e) {
+            dispatch({ type: EntityStateActionType.ERROR, error: e });
         }
-    }, [id, service, filterOption]);
+    }, [id, service]);
 
     function useMutate({id, data, method, mutator}: MutateInput<T, InputT>): void {
         dispatch({type: EntityStateActionType.MUTATING});
@@ -124,26 +118,22 @@ export function useEntity<T, InputT = T>(id: number, service: BaseService<T, Inp
         switch (method) {
             case MutateMethods.DELETE:
                 mutateData = async () => {
-                    let result = await service.delete(id as number);
-                    return result;
+                    return await service.delete(id as number);
                 };
                 break;
             case MutateMethods.PATCH:
                 mutateData = async () => {
-                    let result = await service.patch(id as number, data as Partial<InputT>);
-                    return result;
+                    return await service.patch(id as number, data as Partial<InputT>);
                 };
                 break;
             case MutateMethods.POST:
                 mutateData = async () => {
-                    let result = await service.post(data as InputT);
-                    return result;
+                    return await service.post(data as InputT);
                 };
                 break;
             case MutateMethods.PUT:
                 mutateData = async () => {
-                    let result = await service.put(id as number, data as InputT);
-                    return result;
+                    return await service.put(id as number, data as InputT);
                 };
                 break;
         }

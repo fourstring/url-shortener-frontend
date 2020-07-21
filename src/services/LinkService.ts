@@ -1,13 +1,9 @@
-import {ILink} from "../types/ILink";
+import {ILink, ILinkInput} from "../types/ILink";
 import {BaseService} from "./BaseService";
 
-export class LinkService extends BaseService<ILink>{
+export class LinkService extends BaseService<ILink, ILinkInput>{
     resourceName = "links";
-    endpoint = "/data/links";
-
-    transformResource(resource: ILink): ILink {
-        return resource;
-    }
+    endpoint = "/links";
 }
 
 export const linkService = new LinkService();

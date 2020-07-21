@@ -1,7 +1,11 @@
 import React from "react";
+import {BrowserRouter, Switch} from "react-router-dom";
 
 export function Router() {
     return(
-        <div>hello</div>
+        <BrowserRouter>
+            <Switch>
+            </Switch>
+        </BrowserRouter>
     )
 }

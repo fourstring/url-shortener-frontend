@@ -1,76 +1,85 @@
 import {AxiosInstance} from "axios";
-import config from "../config";
-import {mockClient} from "../mocks/mockClient";
+import {IAuthCredential, IAuthRespData, IRegisterCredential} from "../types/IAuth";
+import {IUser} from "../types/IUser";
 import {client} from "../utils/network";
-import {IAuthCredential, IAuthRespData, IAuthResult, IAuthStatus, IRegisterCredential} from "../types/IAuth";
 
 export class AuthService {
     client: AxiosInstance;
 
-    constructor() {
-        if (config.globalMock) {
-            this.client = mockClient;
-        } else {
-            this.client = client;
-        }
+    constructor(Client ?: AxiosInstance) {
+        this.client = Client ? Client:client;
     }
 
-    async login(cred: IAuthCredential): Promise<IAuthResult> {
+    async login(cred: IAuthCredential): Promise<IUser> {
         try {
             let result = await this.client.post<IAuthRespData>('/auth/login', cred);
-            if (result.status >= 200 && result.status <= 299) {
-                localStorage.setItem('csrf_token', result.data.csrfToken); // Set csrfToken localStorage for further requests.
-                return {status: IAuthStatus.SUCCESS, user: result.data.user}
-            }
-            return {status: IAuthStatus.REJECTED, user: null}
+            localStorage.setItem('access_token', result.data.accessToken);// Set csrfToken localStorage for further requests.
+            localStorage.setItem('csrf_token', result.data.csrfToken); // Set csrfToken localStorage for further requests.
+            return result.data.user;
         } catch (e) {
-            return {status: IAuthStatus.REJECTED, user: null}
+            throw e;
         }
     }
 
     async logout() {
         try {
-            await this.client.get('/logout');
-        } catch (e) {
+            let result =  await this.client.get('/auth/logout');
+            localStorage.removeItem('access_token'); // Clear accessToken stored.
             localStorage.removeItem('csrf_token'); // Clear csrfToken stored.
+            return result.status === 200;
+        }catch (e) {
+            throw e;
         }
-        return true;
     }
 
-    async ping(): Promise<IAuthResult> {
+    async ping(): Promise<IUser|null> {
         try {
-            let result = await this.client.get<IAuthRespData>('/auth/ping');
-            if (result.status >= 200 && result.status <= 299) {
-                localStorage.setItem('csrf_token', result.data.csrfToken); // Set csrfToken localStorage for further requests.
-                return {status: IAuthStatus.SUCCESS, user: result.data.user}
-            }
-            return {status: IAuthStatus.REJECTED, user: null}
+            let result = await this.client.get<IUser>('/auth/ping');
+            return result.data;
         } catch (e) {
-            return {status: IAuthStatus.REJECTED, user: null}
+            if(!(e.isAxiosError && e.response.status === 403)){
+                throw e;
+            }
         }
+        return null;
     }
 
     async register(profile: IRegisterCredential): Promise<boolean> {
         try {
             let result = await this.client.post('/auth/register', profile);
-            return result.status >= 200 && result.status <= 299;
+            return result.status === 200;
         } catch (e) {
-            console.log(e);
-            return false;
+            if(e.isAxiosError && e.response.status === 400){
+                return false;
+            }
+            throw e;
         }
     }
 
-    async checkUsername(username: string): Promise<boolean> {
+    async checkExists(username?: string, email?: string): Promise<boolean> {
         try {
-            let result = await this.client.get('/auth/check_username', {
-                params: {
-                    username
-                }
+            let result = await this.client.post('/auth/exist', {
+                username: username, email: email
             });
-            return result.status >= 200 && result.status <= 299;
+            return result.status === 200;
         } catch (e) {
-            console.log(e);
-            return false;
+            if(e.isAxiosError && e.response.status === 403){
+                return false;
+            }
+            throw e;
+        }
+    }
+
+    async refresh(): Promise<boolean>{
+        try {
+            let result = await this.client.get('/auth/refresh');
+            localStorage.setItem('access_token', result.data.accessToken);
+            return true;
+        } catch (e) {
+            if(e.isAxiosError && e.response.status === 403){
+                return false;
+            }
+            throw e;
         }
     }
 }
