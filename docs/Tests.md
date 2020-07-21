@@ -107,3 +107,40 @@ describe("Test unexpected exception handling of AuthService",async ()=>{
 ```
 ### 如何测试localStorage
 `localStorage`属于浏览器API的一部分，在Node环境下并不可用，但我们可以转而使用该模块：https://github.com/clarkbw/jest-localstorage-mock 。它提供了一个`localStorage`的mock实现，且具有正常的功能。
+
+经过一些讨论发现该mock模块的文档存在一些问题。文档中指出，为了避免不同的测试互相影响，应该使用`beforeEach`在每个测试执行前进行清理，这一思路本身是没有问题的，问题在于它建议的清理方式：
+```typescript
+beforeEach(() => {
+  // values stored in tests will also be available in other tests unless you run
+  localStorage.clear();
+  // or directly reset the storage
+  localStorage.__STORE__ = {};
+  // you could also reset all mocks, but this could impact your other mocks
+  jest.resetAllMocks();
+  // or individually reset a mock used
+  localStorage.setItem.mockClear();
+});
+```
+第一、二种都是仅仅清除对象中存储的数据，但这是不够的，因为对于一个mock模块，它的状态并不仅仅包含数据，更重要的是各个mock函数中存储的调用次数、调用信息等，这些也需要被清除，否则随后的`toHaveBeenCalledTimes`等断言则会失败。
+
+文档中建议的第三种清除方式是不可行的。因为该mock模块提供的mock函数也具有正常的功能，换言之具有mock实现，并不是简单的调用情况统计。而在jest的文档中指出：
+> jest.resetAllMocks()
+  Resets the state of all mocks. Equivalent to calling .mockReset() on every mocked function.
+
+进一步查看`mockReset`的文档：
+> mockFn.mockReset()
+  Does everything that mockFn.mockClear() does, and also **removes any mocked return values or implementations.**
+
+因此使用`resetAllMocks`将会清除模块中提供的mock实现，随后任何与该模块功能有关的测试都会失败。
+
+实际上，我们需要的是清除数据和使用统计信息，但并不清除mock实现，清除统计信息应该使用`jest.fn.mockClear`以及`jest.clearAllMocks`。因此完整清理代码如下：
+```typescript
+beforeEach(() => {
+  localStorage.clear();
+  localStorage.setItem.mockClear();
+  localStorage.getItem.mockClear();
+});
+```
+不使用`clearAllMocks`是为了可能的其他mock模块的考虑。
+
+另外WebStorm等的代码提示是基于正常浏览器/Node环境而非Jest测试环境，因此会提示不存在`mockClear`方法，忽略该提示或使用`// @ts-suppress`屏蔽即可。
