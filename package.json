@@ -107,8 +107,8 @@
       "!src/**/*.d.ts"
     ],
     "setupFiles": [
-      "react-app-polyfill/jsdom",
-      "jest-localstorage-mock"
+      "jest-localstorage-mock",
+      "react-app-polyfill/jsdom"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/src/setupTests.ts"
@@ -125,7 +125,8 @@
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
+      "^.+\\.module\\.(css|sass|scss)$",
+      "<rootDir>/src/index.tsx"
     ],
     "modulePaths": [],
     "moduleNameMapper": {
