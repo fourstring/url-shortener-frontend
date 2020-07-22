@@ -9,6 +9,20 @@ export enum MutateMethods {
     DELETE
 }
 
+export interface MutateInput<T, InputT> {
+    id?: number;
+    data?: T | Partial<InputT>;
+    method?: MutateMethods;
+    mutator?: (dispatch: Dispatch<EntityStateAction<T>>) => Promise<void>;
+}
+
+export interface useEntityState<T> {
+    data: T | null;
+    loading: boolean;
+    error: AxiosError<T> | null;
+    mutating: boolean;
+}
+
 export enum EntityStateActionType {
     SET_DATA,
     CLEAR_DATA,
@@ -25,20 +39,6 @@ export interface EntityStateAction<T> {
     error?: AxiosError<T> | null;
 }
 
-export interface useEntityState<T> {
-    data: T | null;
-    loading: boolean;
-    error: AxiosError<T> | null;
-    mutating: boolean;
-}
-
-export interface MutateInput<T, InputT> {
-    id?: number;
-    data?: T | Partial<InputT>;
-    method?: MutateMethods;
-    mutator?: (dispatch: Dispatch<EntityStateAction<T>>) => Promise<void>;
-}
-
 export interface useEntityResult<T, InputT> extends useEntityState<T> {
     issueMutate: (input: MutateInput<T, InputT>) => void; // useMutate just set states in useEntity.
 }
@@ -50,12 +50,6 @@ function initEntityState<T>(): useEntityState<T> {
         error: null,
         mutating: false
     }
-}
-
-export interface EntityStateAction<T> {
-    type: EntityStateActionType;
-    data?: T | null;
-    error?: AxiosError<T> | null;
 }
 
 function entityStateReducer<T>(state: useEntityState<T>, action: EntityStateAction<T>): useEntityState<T> {
@@ -100,6 +94,7 @@ function entityStateReducer<T>(state: useEntityState<T>, action: EntityStateActi
 
 export function useEntity<T, InputT = T>(id: number, service: BaseService<T, InputT>): useEntityResult<T, InputT> {
     const [state, dispatch] = useReducer<Reducer<useEntityState<T>, EntityStateAction<T>>>(entityStateReducer, initEntityState<T>());
+
     useEffect(() => {
         let fetchData: () => Promise<void> = async () => {
             dispatch({ type: EntityStateActionType.LOADING });
@@ -123,26 +118,22 @@ export function useEntity<T, InputT = T>(id: number, service: BaseService<T, Inp
         switch (method) {
             case MutateMethods.DELETE:
                 mutateData = async () => {
-                    let result = await service.delete(id as number);
-                    return result;
+                    return await service.delete(id as number);
                 };
                 break;
             case MutateMethods.PATCH:
                 mutateData = async () => {
-                    let result = await service.patch(id as number, data as Partial<InputT>);
-                    return result;
+                    return await service.patch(id as number, data as Partial<InputT>);
                 };
                 break;
             case MutateMethods.POST:
                 mutateData = async () => {
-                    let result = await service.post(data as InputT);
-                    return result;
+                    return await service.post(data as InputT);
                 };
                 break;
             case MutateMethods.PUT:
                 mutateData = async () => {
-                    let result = await service.put(id as number, data as InputT);
-                    return result;
+                    return await service.put(id as number, data as InputT);
                 };
                 break;
         }
@@ -167,5 +158,3 @@ export function useEntity<T, InputT = T>(id: number, service: BaseService<T, Inp
         issueMutate: useMutate
     };
 }
-
-

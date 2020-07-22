@@ -7,6 +7,6 @@ const mockClient = axios.create({
     withCredentials: true
 });
 
-const mock = new MockAdapter(mockClient, {delayResponse: 1000});
+export const mock = new MockAdapter(mockClient, {delayResponse: 1000});
 
 export {mockClient};
