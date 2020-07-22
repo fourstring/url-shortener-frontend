@@ -5,16 +5,16 @@ import {IUser} from "./types/IUser";
 import {authService} from "./services/AuthService";
 
 function App() {
-    const [user, setUser] = useState<IUser | null>(null);
-    useEffect(() => {
-        authService.ping().then(value => setUser(value.user));
-    }, []);
+  const [user, setUser] = useState<IUser | null>(null);
+  useEffect(() => {
+    authService.ping().then(value => setUser(value));
+  }, []);
 
-    return (
-        <UserContext.Provider value={{user, setUser}}>
-            <Router/>
-        </UserContext.Provider>
-    )
+  return (
+    <UserContext.Provider value={{user, setUser}}>
+      <Router/>
+    </UserContext.Provider>
+  )
 }
 
 export default App;

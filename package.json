@@ -15,11 +15,12 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.5",
+    "@types/url-join": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
-    "babel-eslint": "10.0.3",
     "axios": "^0.19.2",
     "axios-mock-adapter": "^1.18.1",
+    "babel-eslint": "10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "8.0.6",
     "babel-plugin-named-asset-import": "^0.3.6",
@@ -70,6 +71,7 @@
     "terser-webpack-plugin": "2.3.4",
     "ts-pnp": "1.1.5",
     "typescript": "~3.7.2",
+    "url-join": "^4.0.1",
     "url-loader": "2.3.0",
     "webpack": "4.41.5",
     "webpack-dev-server": "3.10.2",
@@ -115,7 +117,7 @@
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
       "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
     ],
-    "testEnvironment": "jest-environment-jsdom-fourteen",
+    "testEnvironment": "jest-environment-jsdom-sixteen",
     "transform": {
       "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
@@ -153,6 +155,8 @@
     ]
   },
   "devDependencies": {
-    "jest-localstorage-mock": "^2.4.3"
+    "jest-environment-jsdom-sixteen": "^1.0.3",
+    "jest-localstorage-mock": "^2.4.3",
+    "react-test-renderer": "16.13.1"
   }
 }
