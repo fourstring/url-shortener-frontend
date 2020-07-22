@@ -25,7 +25,7 @@ describe('Client set correctly test', () => {
         // @ts-ignore
         const result = client.interceptors.request.handlers[0].fulfilled({headers: {}});
         expect(result.headers['X-CSRFToken']).toBe('token');
-        expect(result.headers['AccessToken']).toBe('token');
+        expect(result.headers['Authorization']).toBe('Bearer token');
     });
 
     /*
@@ -38,6 +38,6 @@ describe('Client set correctly test', () => {
         // @ts-ignore
         const result = client.interceptors.request.handlers[0].fulfilled({headers: {}});
         expect(result.headers['X-CSRFToken']).toBeUndefined();
-        expect(result.headers['AccessToken']).toBeUndefined();
+        expect(result.headers['Authorization']).toBeUndefined();
     });
 })

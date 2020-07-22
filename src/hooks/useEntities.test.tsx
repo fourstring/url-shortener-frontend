@@ -1,80 +1,86 @@
-import {useEntities, EntitiesResult} from './useEntities';
+import {EntitiesResult, useEntities} from './useEntities';
 import {MutateMethods} from "./useEntity";
-import {renderHook, act} from '@testing-library/react-hooks'
+import {act, renderHook} from '@testing-library/react-hooks'
 import {ILink, ILinkInput} from "../types/ILink";
-import {iPagedData, mock, linkService, iLink, iLinkList, requestFilterOptions} from '../mocks/mockClient';
+import {iLink, iLinkList, iPagedData, iRequestFilterOptions, linkService, mock} from '../mocks/mockClient';
 
 const mutatorData: ILink[] | Partial<ILinkInput>[] = [{user: 1, href: 'href'}]
-function testResultBeforeUpdate(result : EntitiesResult<ILink, ILinkInput>){
-    expect(result.entities.size).toBe(0);
-    expect(result.count).toBeNull();
-    expect(result.loading).toBe(true);
-    expect(result.error).toBeNull();
-    expect(result.mutating).toBe(false);
+
+function testResultBeforeUpdate(result: EntitiesResult<ILink, ILinkInput>) {
+  expect(result.entities.size).toBe(0);
+  expect(result.count).toBeNull();
+  expect(result.loading).toBe(true);
+  expect(result.error).toBeNull();
+  expect(result.mutating).toBe(false);
 }
 
 function testResultAfterUpdate(result: EntitiesResult<ILink, ILinkInput>, data?: ILink[] | null, count?: number | null) {
-    let map = new Map<number, ILink>();
-    data?.forEach( link => map.set(link.id, link));
-    count = (typeof count == 'undefined') ? null : count;
-    expect(result.entities).toEqual(map);
-    expect(result.count).toBe(count);
-    expect(result.loading).toBe(false);
-    expect(result.error).toBeNull();
-    expect(result.mutating).toBe(false);
+  let map = new Map<number, ILink>();
+  data?.forEach(link => map.set(link.id, link));
+  count = (typeof count == 'undefined') ? null : count;
+  expect(result.entities).toEqual(map);
+  expect(result.count).toBe(count);
+  expect(result.loading).toBe(false);
+  expect(result.error).toBeNull();
+  expect(result.mutating).toBe(false);
 }
 
-function testErrorAfterUpdate(result : EntitiesResult<ILink, ILinkInput>){
-    expect(result.entities.size).toBe(0);
-    expect(result.loading).toBe(false);
-    expect(result.error).not.toBeNull();
-    expect(result.mutating).toBe(false);
+function testErrorAfterUpdate(result: EntitiesResult<ILink, ILinkInput>) {
+  expect(result.entities.size).toBe(0);
+  expect(result.loading).toBe(false);
+  expect(result.error).not.toBeNull();
+  expect(result.mutating).toBe(false);
 }
 
-function actIssueMutate(result: EntitiesResult<ILink, ILinkInput>, method: MutateMethods, data?: ILink[] | Partial<ILinkInput>[], mutator?: any){
-    act(() => {
-        result.issueMutate({
-            ids: [1],
-            data: data? data : mutatorData,
-            method: method,
-            mutator: mutator
-        })
-    });
+function actIssueMutate(result: EntitiesResult<ILink, ILinkInput>, method: MutateMethods, data?: ILink[] | Partial<ILinkInput>[], mutator?: any) {
+  act(() => {
+    result.issueMutate({
+      ids: [1],
+      data: data ? data : mutatorData,
+      method: method,
+      mutator: mutator
+    })
+  });
 }
+
 /*
 * 检测 useEntities set state
 * useEntities 在获得数据和未获得数据时应该分别更新和设置错误
 * @author wfn
 */
 describe('useEntities correctly set state', () => {
-    /*
-    * 检测 useEntities 正常情况
-    * useEntities 出错时应设置 error, 检查更新后 error 不为 null
-    * @author wfn
-    */
-    it('should correctly set data and update loading',async ()=>{
-        mock.onGet('/links').reply(config => {return [200, iPagedData]});
-        const { result, waitForNextUpdate } = renderHook(() =>
-            useEntities<ILink, ILinkInput>(linkService, requestFilterOptions)
-        )
-        testResultBeforeUpdate(result.current);
-        await waitForNextUpdate();
-        testResultAfterUpdate(result.current,  iLinkList, 10);
-    })
+  /*
+  * 检测 useEntities 正常情况
+  * useEntities 出错时应设置 error, 检查更新后 error 不为 null
+  * @author wfn
+  */
+  it('should correctly set data and update loading', async () => {
+    mock.onGet('/links').reply(config => {
+      return [200, iPagedData]
+    });
+    const {result, waitForNextUpdate} = renderHook(() =>
+      useEntities<ILink, ILinkInput>(linkService, iRequestFilterOptions)
+    )
+    testResultBeforeUpdate(result.current);
+    await waitForNextUpdate();
+    testResultAfterUpdate(result.current, iLinkList, 10);
+  })
 
-    /*
-    * 检测 useEntities 出错情况
-    * useEntities 出错时应设置 error, 检查更新后 error 不为 null
-    * @author wfn
-    */
-    it('should correctly set error if failed',async ()=>{
-        mock.onGet('/links').reply(config => {return [500]});
-        const {result, waitForNextUpdate} = renderHook(() =>
-            useEntities<ILink, ILinkInput>(linkService, requestFilterOptions)
-        )
-        await waitForNextUpdate();
-        testErrorAfterUpdate(result.current);
-    })
+  /*
+  * 检测 useEntities 出错情况
+  * useEntities 出错时应设置 error, 检查更新后 error 不为 null
+  * @author wfn
+  */
+  it('should correctly set error if failed', async () => {
+    mock.onGet('/links').reply(config => {
+      return [500]
+    });
+    const {result, waitForNextUpdate} = renderHook(() =>
+      useEntities<ILink, ILinkInput>(linkService, iRequestFilterOptions)
+    )
+    await waitForNextUpdate();
+    testErrorAfterUpdate(result.current);
+  })
 })
 
 /*
@@ -84,28 +90,34 @@ describe('useEntities correctly set state', () => {
  * @author wfn
  */
 it('useEntities issueMutate test', async () => {
-    mock.onPut('/links/1').reply(config => {return [200, iLink]});
-    mock.onDelete('/links/1').reply(config => {return [200, iLink]});
-    mock.onPatch('/links/1').reply(config => {return [200, iLink]});
+  mock.onPut('/links/1').reply(config => {
+    return [200, iLink]
+  });
+  mock.onDelete('/links/1').reply(config => {
+    return [200, iLink]
+  });
+  mock.onPatch('/links/1').reply(config => {
+    return [200, iLink]
+  });
 
-    const { result, waitForNextUpdate } = renderHook(() =>
-        useEntities<ILink, ILinkInput>(linkService, requestFilterOptions)
-    )
-    await waitForNextUpdate();
+  const {result, waitForNextUpdate} = renderHook(() =>
+    useEntities<ILink, ILinkInput>(linkService, iRequestFilterOptions)
+  )
+  await waitForNextUpdate();
 
-    actIssueMutate(result.current, MutateMethods.PATCH);
-    await waitForNextUpdate();
-    testResultAfterUpdate(result.current, iLinkList);
+  actIssueMutate(result.current, MutateMethods.PATCH);
+  await waitForNextUpdate();
+  testResultAfterUpdate(result.current, iLinkList);
 
-    actIssueMutate(result.current, MutateMethods.PUT);
-    await waitForNextUpdate();
-    testResultAfterUpdate(result.current, iLinkList);
+  actIssueMutate(result.current, MutateMethods.PUT);
+  await waitForNextUpdate();
+  testResultAfterUpdate(result.current, iLinkList);
 
-    actIssueMutate(result.current, MutateMethods.DELETE);
-    await waitForNextUpdate();
-    testResultAfterUpdate(result.current);
+  actIssueMutate(result.current, MutateMethods.DELETE);
+  await waitForNextUpdate();
+  testResultAfterUpdate(result.current);
 
-    const func = jest.fn();
-    actIssueMutate(result.current, MutateMethods.PUT, mutatorData, func);
-    expect(func).toBeCalledTimes(1);
+  const func = jest.fn();
+  actIssueMutate(result.current, MutateMethods.PUT, mutatorData, func);
+  expect(func).toBeCalledTimes(1);
 })
