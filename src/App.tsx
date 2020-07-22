@@ -1,30 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import {createBrowserHistory} from "history";
-import {IAuthRedirectState} from "./types/IAuth";
-import './App.css';
-
-// export const history = createBrowserHistory<IAuthRedirectState>();
+import React, {useEffect, useState} from 'react';
+import {Router} from "./router";
+import {UserContext} from "./contexts/UserContext";
+import {IUser} from "./types/IUser";
+import {authService} from "./services/AuthService";
 
 function App() {
+  const [user, setUser] = useState<IUser | null>(null);
+  useEffect(() => {
+    authService.ping().then(value => setUser(value));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo"/>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <UserContext.Provider value={{user, setUser}}>
+      <Router/>
+    </UserContext.Provider>
+  )
 }
 
 export default App;
