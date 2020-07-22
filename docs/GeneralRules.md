@@ -29,6 +29,8 @@ export function processDemos(demo:IDemo1|IDemo2) {
 ```
 所有定义的接口均使用**IPascalCase**命名法，且应该被置于`src/types`文件夹下的某个`.ts`文件中，一项功能相关的多个Interface可以置于同一文件中。
 
+注意：仅有使用了JSX的文件才以`.tsx`扩展名命名，其余代码文件均以`.ts`扩展名命名。
+
 ## ESLint
 我们使用Create React App默认的ESLint配置。但我们需要做的额外工作是配置你的IDE或Editor，使其能读取ESLint的输出，进而即时反馈在编辑界面上。
 
@@ -44,6 +46,7 @@ export function processDemos(demo:IDemo1|IDemo2) {
 * Interface: **IPascalCase**
 * View: **PascalCaseView**
 * Service: **PascalCaseService**
+* Mock Object: **mockObjectName**
 
 ## 文件结构
 项目`src/`文件夹下大致遵循如下结构：

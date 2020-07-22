@@ -17,6 +17,12 @@
     * 为表达方便，注释可使用中文。
     * 一般情况下，请勿直接修改他人测试代码。若认为他人测试代码存在问题，可通过issue等方式通知测试作者进行修改。
 * 更新测试代码的commit message使用`tests: `分类。
+## Mock规范
+mock对象主要在两类测试中用到：单元测试与端到端测试。而这两类测试所需的数据或mock行为可能不一致。为了区分起见，我们规定供单元测试使用的mock对象以`test`前缀命名，如`testBaseService`；供端到端测试使用的mock对象以`mock`前缀命名，如`mockBaseService`。
+
+单元测试用到的mock对象和数据可以直接放在相关的单元测试文件中，多个文件均需要使用的可以放在`mocks/testData.ts`下。
+
+端到端测试用到的mock对象和数据与单元测试的规则类似，但共同数据应置于`mocks/mockData.ts`下。
     
 ## 参考资料
 ### 如何测试Axios Interceptors
