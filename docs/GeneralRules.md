@@ -47,6 +47,9 @@ export function processDemos(demo:IDemo1|IDemo2) {
 * View: **PascalCaseView**
 * Service: **PascalCaseService**
 * Mock Object: **mockObjectName**
+* Test Object: **testObjectName**
+
+最后两项规则详见测试文档。
 
 ## 文件结构
 项目`src/`文件夹下大致遵循如下结构：
