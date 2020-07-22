@@ -150,3 +150,55 @@ beforeEach(() => {
 不使用`clearAllMocks`是为了可能的其他mock模块的考虑。
 
 另外WebStorm等的代码提示是基于正常浏览器/Node环境而非Jest测试环境，因此会提示不存在`mockClear`方法，忽略该提示或使用`// @ts-suppress`屏蔽即可。
+
+### 如何点击组件进行测试
+
+在测试 `点击` 效果的时候，我们使用 `fireEvent.click(screen.getByText(“Hello world”))` 来寻找内容为 `“Hello world”`的组件，但一个可能会遇到的问题是：
+
+```
+Unable to find an element with the text: Hello world.
+This could be because the text is broken up by multiple elements.
+In this case, you can provide a function for your text
+matcher to make your matcher more flexible.
+```
+
+这是因为当text被包裹在深层的组件里时（如下图，“我的短连接”被包裹在 `<span></span>` 中），会出现寻找不到该组件的情况。而使用其他关键字来寻找是一件很麻烦的事。
+
+<img src="https://i.loli.net/2020/07/22/jN9wvb6fuexGmzg.png" alt="image-20200722171349265" style="zoom:150%;" />
+
+实际上，我们的 `screen.getByText` 不仅支持传递参数，也支持传递一个函数来作为`matcher`对组件进行删选，所以我们实现一个自定义的 `getByDeepText` 函数来寻找深层内容符合我们预期的组件
+
+```javascript
+function getByDeepText(text: string) {
+    return screen.getByText((content: string, node: Element) => {
+        const hasText = (node: Element) => node.textContent === text;
+        const nodeHasText = hasText(node);
+        const childrenDontHaveText = Array.from(node.children).every(
+            (child: Element) => !hasText(child)
+        );
+        return nodeHasText && childrenDontHaveText;
+    });
+}
+```
+
+使用时直接调用 `fireEvent.click(getByDeepText('your text'))` 来执行组件的点击。
+
+### 如何设置以及测试当前 `url`
+
+如果测试依赖 `url` 的组件，可以使用：
+
+```javascript
+import { MemoryRouter } from 'react-router';
+render(
+    <MemoryRouter initialEntries={["/"]}> # "/"是要模拟的url
+    	<NavBar/>
+   	</MemoryRouter>
+);
+```
+
+检查现在的 `url` 必须使用 `global`，省略该参数会得到null
+
+```javascript
+expect(global.window.location.pathname).toEqual('/links');
+```
+
