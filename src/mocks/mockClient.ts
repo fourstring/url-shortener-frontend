@@ -21,33 +21,33 @@ export const iUser: IUser = {id: 1, username: 'string', email: "user@example.com
 
 /* link service */
 /* const data used to mock */
-export const iLink : ILink = {
-    id: 1,
-    user: iUser,
-    linkKey: "string",
-    href: "string",
-    createAt: "string",
-    updateAt: "string"
+export const iLink: ILink = {
+  id: 1,
+  user: iUser,
+  linkKey: "string",
+  href: "string",
+  createAt: "string",
+  updateAt: "string"
 }
 
 export const iLinkList: ILink[] = [
-    iLink
+  iLink
 ]
 
 export const iPagedData: IPagedData<ILink> = {
-    count: 10,
-    results: iLinkList,
+  count: 10,
+  results: iLinkList,
 }
 
 export const iLinkInput = {
-    user: 1,
-    href: "string",
+  user: 1,
+  href: "string",
 }
 
 export const iRequestFilterOptions: IRequestFilterOptions<ILink> = {
-    page: 1,
-    size: 10,
-    fields: []
+  page: 1,
+  size: 10,
+  fields: []
 };
 
-export { mock }
+export {mock}

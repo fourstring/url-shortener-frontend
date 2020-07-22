@@ -1,4 +1,4 @@
 export interface IPagedData<T> {
-    count: number;
-    results: T[];
+  count: number;
+  results: T[];
 }
