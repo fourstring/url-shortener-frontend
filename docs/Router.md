@@ -100,6 +100,19 @@ export interface IRouterProps {
 ```
 即只需传入路由配置数组，即可自动生成实际路由组件。
 
+为了组件使用的灵活性，我们的`Router`组件只根据路由配置生成`Switch`与`Route`组件，但使用何种`react-router-dom`路由器并不限制，可以任意组合，如在浏览器中使用
+```typescript jsx
+<BrowserRouter>
+  <Router/>
+</BrowserRouter>
+```
+在测试中使用
+```typescript jsx
+<MemoryRouter>
+  <Router/>
+</MemoryRouter>
+```
+
 ## 辅助函数
 我们实现路由配置文件的另一目的是为了其他组件能便捷访问路由元数据，因此我们还实现一个辅助Hook用于达成这一目的，其接口如下：
 ```typescript
