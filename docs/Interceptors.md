@@ -1,0 +1,7 @@
+# Interceptors规范
+
+Axios提供了Interceptor机制，允许开发者在每个请求发出前以及每个响应返回调用代码前对请求/响应进行一定修改，适合执行一些对于大量请求/响应都需要执行的操作。
+
+我们使用Interceptor来简化认证模式的实现，认证模式细节参考AuthService文档。使用Interceptor，我们可以实现自动化为每个请求添加JWT Authorization头和X-CSRFTOKEN头。
+
+这两个头的添加逻辑是基本一致的。AuthService的方法将在调用时自动在LocalStorage中设置`accessToken`与`csrfToken`，相应地，interceptor只需从LocalStorage中读出这两个数据，并按照认证模式的要求添加`Authorization`头和`X-CSRFTOKEN`头即可。如果在LocalStorage中没有找到这样的键，则什么也不做。
