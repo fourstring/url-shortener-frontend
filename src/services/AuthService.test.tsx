@@ -1,12 +1,5 @@
-import {AuthService} from './AuthService';
 import '@testing-library/jest-dom'
-import axios from "axios";
-import MockAdapter from "axios-mock-adapter";
-import {IUser} from "../types/IUser";
-
-const user: IUser = {id: 1, username: 'test1', email: 'test@test.com'};
-let client = axios.create();
-let mock = new MockAdapter(client);
+import {authService, mock, user} from "../mocks/mockClient";
 
 beforeEach(() =>{
     // @ts-ignore
@@ -21,7 +14,7 @@ beforeEach(() =>{
 * @author wfn
 */
 describe('AuthService login test',() => {
-    const request = {username: 'test1', password: ''};
+    const request = {username: '', password: ''};
 
     /*
     * 检测 AuthService login 成功返回值
@@ -32,7 +25,6 @@ describe('AuthService login test',() => {
         mock.onPost('/auth/login').reply(config => {
             return [200, {user, accessToken: "justTestToken", csrfToken: "justTestToken"}]
         });
-        let authService = new AuthService(client);
         await expect(authService.login(request)).resolves.toEqual(user);
         expect(localStorage.setItem).toHaveBeenCalledTimes(2);
         expect(localStorage.getItem('access_token')).toBe("justTestToken");
@@ -48,7 +40,6 @@ describe('AuthService login test',() => {
         mock.onPost('/auth/login').reply(config => {
             return [403]
         });
-        let authService = new AuthService(client);
         await expect(authService.login(request)).rejects.toThrow();
         expect(localStorage.setItem).toHaveBeenCalledTimes(0);
     })
@@ -62,7 +53,6 @@ describe('AuthService login test',() => {
         mock.onPost('/auth/login').reply(config => {
             return [500]
         });
-        let authService = new AuthService(client);
         await expect(authService.login(request)).rejects.toThrow();
         expect(localStorage.setItem).toHaveBeenCalledTimes(0);
     })
@@ -83,7 +73,6 @@ describe('AuthService logout test',() => {
         mock.onGet('/auth/logout').reply(config => {
             return [200]
         });
-        let authService = new AuthService(client);
         await expect(authService.logout()).resolves.toEqual(true);
         expect(localStorage.removeItem).toHaveBeenCalledTimes(2);
         expect(localStorage.getItem('access_token')).toBeNull();
@@ -99,7 +88,6 @@ describe('AuthService logout test',() => {
         mock.onGet('/auth/logout').reply(config => {
             return [500]
         });
-        let authService = new AuthService(client);
         await expect(authService.logout()).rejects.toThrow();
         expect(localStorage.removeItem).toHaveBeenCalledTimes(0);
     })
@@ -124,7 +112,6 @@ describe('AuthService register test',() => {
     */
     it("Test normal flow of AuthService register",async ()=>{
         mock.onPost('/auth/register').reply(config => {return [200]});
-        let authService = new AuthService(client);
         await expect(authService.register(profile)).resolves.toEqual(true);
     });
 
@@ -135,7 +122,6 @@ describe('AuthService register test',() => {
     */
     it('Test fail flow of AuthService register', async () => {
         mock.onPost('/auth/register').reply(config => {return [400]});
-        let authService = new AuthService(client);
         await expect(authService.register(profile)).resolves.toEqual(false);
     })
 
@@ -146,7 +132,6 @@ describe('AuthService register test',() => {
     */
     it('Test error flow of AuthService register', async () => {
         mock.onPost('/auth/register').reply(config => {return [500]});
-        let authService = new AuthService(client);
         await expect(authService.register(profile)).rejects.toThrow();
     })
 })
@@ -164,7 +149,6 @@ describe('AuthService ping test',() => {
     */
     it("Test normal flow of AuthService ping",async ()=>{
         mock.onGet('/auth/ping').reply(config => {return [200, user]});
-        let authService = new AuthService(client);
         await expect(authService.ping()).resolves.toEqual(user);
     });
 
@@ -175,7 +159,6 @@ describe('AuthService ping test',() => {
     */
     it('Test fail flow of AuthService ping', async () => {
         mock.onGet('/auth/ping').reply(config => {return [403]});
-        let authService = new AuthService(client);
         await expect(authService.ping()).resolves.toEqual(null);
     })
 
@@ -186,7 +169,6 @@ describe('AuthService ping test',() => {
     */
     it('Test error flow of AuthService ping', async () => {
         mock.onGet('/auth/ping').reply(config => {return [500]});
-        let authService = new AuthService(client);
         await expect(authService.ping()).rejects.toThrow();
     })
 })
@@ -206,7 +188,6 @@ describe('AuthService refresh test',() => {
     */
     it("Test normal flow of AuthService refresh",async ()=>{
         mock.onGet('/auth/refresh').reply(config => {return [200, result]});
-        let authService = new AuthService(client);
         await expect(authService.refresh()).resolves.toEqual(true);
         expect(localStorage.setItem).toHaveBeenCalledTimes(1);
         expect(localStorage.getItem('access_token')).toBe("justTestToken");
@@ -214,14 +195,12 @@ describe('AuthService refresh test',() => {
 
     it('Test fail flow of AuthService refresh', async () => {
         mock.onGet('/auth/refresh').reply(config => {return [403]});
-        let authService = new AuthService(client);
         await expect(authService.refresh()).resolves.toEqual(false);
         expect(localStorage.setItem).toHaveBeenCalledTimes(0);
     })
 
     it('Test error flow of AuthService refresh', async () => {
         mock.onGet('/auth/refresh').reply(config => {return [500]});
-        let authService = new AuthService(client);
         await expect(authService.refresh()).rejects.toThrow();
         expect(localStorage.setItem).toHaveBeenCalledTimes(0);
     })
@@ -243,7 +222,6 @@ describe('AuthService exist test',() => {
     */
     it("Test normal flow of AuthService exist",async ()=>{
         mock.onPost('/auth/exist').reply(config => {return [200]});
-        let authService = new AuthService(client);
         await expect(authService.checkExists(username, email)).resolves.toEqual(true);
     });
 
@@ -254,7 +232,6 @@ describe('AuthService exist test',() => {
     */
     it('Test 403 flow of AuthService exist', async () => {
         mock.onPost('/auth/exist').reply(config => {return [403]});
-        let authService = new AuthService(client);
         await expect(authService.checkExists(username, email)).resolves.toEqual(false);
     })
 
@@ -265,7 +242,6 @@ describe('AuthService exist test',() => {
     */
     it('Test 400 flow of AuthService exist', async () => {
         mock.onPost('/auth/exist').reply(config => {return [400]});
-        let authService = new AuthService(client);
         await expect(authService.checkExists(username, email)).rejects.toThrow();
     })
 
@@ -276,7 +252,6 @@ describe('AuthService exist test',() => {
     */
     it('Test error flow of AuthService exist', async () => {
         mock.onPost('/auth/exist').reply(config => {return [500]});
-        let authService = new AuthService(client);
         await expect(authService.checkExists(username, email)).rejects.toThrow();
     })
 })

@@ -1,26 +1,5 @@
 import '@testing-library/jest-dom'
-import { LinkService } from './LinkService'
-import axios from "axios";
-import MockAdapter from "axios-mock-adapter";
-import {IRequestFilterOptions} from "./ServiceInterfaces";
-import {IPagedData} from "../types/IPage";
-import {ILink, ILinkInput} from "../types/ILink";
-
-let client = axios.create();
-let mock = new MockAdapter(client);
-
-let link = {
-    id: 0,
-    user: {
-        id: 0,
-        username: "string",
-        email: "user@example.com"
-    },
-    linkKey: "string",
-    href: "string",
-    createAt: "string",
-    updateAt: "string"
-}
+import {linkService, mock, iLink, iPagedData, requestFilterOptions, iLinkInput} from "../mocks/mockClient";
 
 /*
 * 检测 LinkService get 返回值
@@ -34,9 +13,8 @@ describe('LinkService get test',() => {
     * @author wfn
     */
     it("Test normal flow of LinkService get",async ()=>{
-        mock.onGet('/links/1').reply(config => {return [200, link]});
-        let linkService = new LinkService(client);
-        await expect(linkService.get(1)).resolves.toEqual(link);
+        mock.onGet('/links/1').reply(config => {return [200, iLink]});
+        await expect(linkService.get(1)).resolves.toEqual(iLink);
     });
 
     /*
@@ -46,7 +24,6 @@ describe('LinkService get test',() => {
     */
     it("Test fail flow of LinkService get",async ()=>{
         mock.onGet('/links/1').reply(config => {return [404]});
-        let linkService = new LinkService(client);
         await expect(linkService.get(1)).rejects.toThrow();
     });
 
@@ -57,7 +34,6 @@ describe('LinkService get test',() => {
     */
     it('Test error flow of LinkService get', async () => {
         mock.onGet('/links/1').reply(config => {return [500]});
-        let linkService = new LinkService(client);
         await expect(linkService.get(1)).rejects.toThrow();
     })
 })
@@ -68,34 +44,14 @@ describe('LinkService get test',() => {
 * @author wfn
 */
 describe('LinkService getAll test',() => {
-    const request: IRequestFilterOptions<ILink> = {page: 1, size: 10, fields: []};
-    const response: IPagedData<ILink> = {
-        count: 1,
-        results: [
-            {
-                id: 1,
-                user: {
-                    id: 0,
-                    username: "string",
-                    email: "user@example.com",
-                },
-                linkKey: "string",
-                href: "string",
-                createAt: "string",
-                updateAt: "string"
-            }
-        ]
-    }
-
     /*
     * 检测 LinkService getAll 成功返回值
     * getAll 成功返回 200 并返回相应的 link 数据
     * @author wfn
     */
     it("Test normal flow of LinkService getAll",async ()=>{
-        mock.onGet('/links').reply(config => {return [200, response]});
-        let linkService = new LinkService(client);
-        await expect(linkService.getAll(request)).resolves.toEqual(response);
+        mock.onGet('/links').reply(config => {return [200, iPagedData]});
+        await expect(linkService.getAll(requestFilterOptions)).resolves.toEqual(iPagedData);
     });
 
     /*
@@ -105,8 +61,7 @@ describe('LinkService getAll test',() => {
     */
     it('Test error flow of LinkService getAll', async () => {
         mock.onGet('/links').reply(config => {return [500]});
-        let linkService = new LinkService(client);
-        await expect(linkService.getAll(request)).rejects.toThrow();
+        await expect(linkService.getAll(requestFilterOptions)).rejects.toThrow();
     })
 })
 
@@ -123,7 +78,6 @@ describe('LinkService delete test',() => {
     */
     it("Test normal flow of LinkService delete",async ()=>{
         mock.onDelete('/links/1').reply(config => {return [200]});
-        let linkService = new LinkService(client);
         await expect(linkService.delete(1)).resolves.toEqual(true);
     });
 
@@ -134,7 +88,6 @@ describe('LinkService delete test',() => {
     */
     it("Test fail flow of LinkService delete",async ()=>{
         mock.onDelete('/links/1').reply(config => {return [404]});
-        let linkService = new LinkService(client);
         await expect(linkService.delete(1)).rejects.toThrow();
     });
 
@@ -145,7 +98,6 @@ describe('LinkService delete test',() => {
     */
     it('Test error flow of LinkService delete', async () => {
         mock.onDelete('/links/1').reply(config => {return [500]});
-        let linkService = new LinkService(client);
         await expect(linkService.delete(1)).rejects.toThrow();
     })
 })
@@ -156,19 +108,14 @@ describe('LinkService delete test',() => {
 * @author wfn
 */
 describe('LinkService post test',() => {
-    const request: ILinkInput =  {
-        user: 0,
-        href: "string"
-    }
     /*
     * 检测 LinkService post 成功返回值
     * post 成功返回 200, 并返回相应的 link 数据
     * @author wfn
     */
     it("Test normal flow of LinkService post",async ()=>{
-        mock.onPost('/links').reply(config => {return [200, link]});
-        let linkService = new LinkService(client);
-        await expect(linkService.post(request)).resolves.toEqual(link);
+        mock.onPost('/links').reply(config => {return [200, iLink]});
+        await expect(linkService.post(iLinkInput)).resolves.toEqual(iLink);
     });
 
     /*
@@ -178,8 +125,7 @@ describe('LinkService post test',() => {
     */
     it("Test fail flow of LinkService post",async ()=>{
         mock.onPost('/links').reply(config => {return [400]});
-        let linkService = new LinkService(client);
-        await expect(linkService.post(request)).rejects.toThrow();
+        await expect(linkService.post(iLinkInput)).rejects.toThrow();
     });
 
     /*
@@ -189,7 +135,6 @@ describe('LinkService post test',() => {
     */
     it('Test error flow of LinkService post', async () => {
         mock.onPost('/links').reply(config => {return [500]});
-        let linkService = new LinkService(client);
-        await expect(linkService.post(request)).rejects.toThrow();
+        await expect(linkService.post(iLinkInput)).rejects.toThrow();
     })
 })
