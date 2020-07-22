@@ -12,7 +12,6 @@ export interface IRequestFilterOptions<T> {
 
 export interface EntityService<T, InputT = T> {
   endpoint: string; //该Service所要请求的 RESTFUL API的路径
-  resourceName: string;
   client: AxiosInstance | MockAdapter; //该Service发起请求时所使用的 Axios client
 
   get(id: number): Promise<T>;

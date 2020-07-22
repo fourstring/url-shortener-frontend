@@ -14,7 +14,7 @@ client.interceptors.request.use(config => {
     config.headers['X-CSRFToken'] = csrfToken;
   }
   if (accessToken) {
-    config.headers['AccessToken'] = accessToken;
+    config.headers['Authorization'] = `Bearer ${accessToken}`;
   }
   return config;
 });

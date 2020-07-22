@@ -1,35 +1,27 @@
 import {AxiosInstance} from "axios";
 import {IAuthCredential, IAuthRespData, IRegisterCredential} from "../types/IAuth";
 import {IUser} from "../types/IUser";
-import {client} from "../utils/network";
+import {client as normalClient} from "../utils/network";
 
 export class AuthService {
   client: AxiosInstance;
 
-  constructor(Client ?: AxiosInstance) {
-    this.client = Client ? Client : client;
+  constructor(client ?: AxiosInstance) {
+    this.client = client || normalClient;
   }
 
   async login(cred: IAuthCredential): Promise<IUser> {
-    try {
-      let result = await this.client.post<IAuthRespData>('/auth/login', cred);
-      localStorage.setItem('access_token', result.data.accessToken);// Set csrfToken localStorage for further requests.
-      localStorage.setItem('csrf_token', result.data.csrfToken); // Set csrfToken localStorage for further requests.
-      return result.data.user;
-    } catch (e) {
-      throw e;
-    }
+    let result = await this.client.post<IAuthRespData>('/auth/login', cred);
+    localStorage.setItem('access_token', result.data.accessToken);// Set csrfToken localStorage for further requests.
+    localStorage.setItem('csrf_token', result.data.csrfToken); // Set csrfToken localStorage for further requests.
+    return result.data.user;
   }
 
   async logout() {
-    try {
-      let result = await this.client.get('/auth/logout');
-      localStorage.removeItem('access_token'); // Clear accessToken stored.
-      localStorage.removeItem('csrf_token'); // Clear csrfToken stored.
-      return result.status === 200;
-    } catch (e) {
-      throw e;
-    }
+    let result = await this.client.get('/auth/logout');
+    localStorage.removeItem('access_token'); // Clear accessToken stored.
+    localStorage.removeItem('csrf_token'); // Clear csrfToken stored.
+    return result.status === 200;
   }
 
   async ping(): Promise<IUser | null> {
