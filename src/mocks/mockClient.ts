@@ -15,12 +15,15 @@ export const baseService = new BaseService<string>(client);
 export const linkService = new LinkService(client);
 export const authService = new AuthService(client);
 
-/* const data use to mock */
-export const user: IUser = {id: 1, username: 'string', email: "user@example.com"};
+/* user service */
+/* const data used to mock */
+export const iUser: IUser = {id: 1, username: 'string', email: "user@example.com"};
 
+/* link service */
+/* const data used to mock */
 export const iLink : ILink = {
     id: 1,
-    user: user,
+    user: iUser,
     linkKey: "string",
     href: "string",
     createAt: "string",
@@ -41,7 +44,7 @@ export const iLinkInput = {
     href: "string",
 }
 
-export const requestFilterOptions: IRequestFilterOptions<ILink> = {
+export const iRequestFilterOptions: IRequestFilterOptions<ILink> = {
     page: 1,
     size: 10,
     fields: []

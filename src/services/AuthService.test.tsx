@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import {authService, mock, user} from "../mocks/mockClient";
+import {authService, mock, iUser} from "../mocks/mockClient";
 
 beforeEach(() =>{
     // @ts-ignore
@@ -23,9 +23,9 @@ describe('AuthService login test',() => {
     */
     it("Test normal flow of AuthService login",async ()=>{
         mock.onPost('/auth/login').reply(config => {
-            return [200, {user, accessToken: "justTestToken", csrfToken: "justTestToken"}]
+            return [200, {user: iUser, accessToken: "justTestToken", csrfToken: "justTestToken"}]
         });
-        await expect(authService.login(request)).resolves.toEqual(user);
+        await expect(authService.login(request)).resolves.toEqual(iUser);
         expect(localStorage.setItem).toHaveBeenCalledTimes(2);
         expect(localStorage.getItem('access_token')).toBe("justTestToken");
         expect(localStorage.getItem('csrf_token')).toBe("justTestToken");
@@ -148,8 +148,8 @@ describe('AuthService ping test',() => {
     * @author wfn
     */
     it("Test normal flow of AuthService ping",async ()=>{
-        mock.onGet('/auth/ping').reply(config => {return [200, user]});
-        await expect(authService.ping()).resolves.toEqual(user);
+        mock.onGet('/auth/ping').reply(config => {return [200, iUser]});
+        await expect(authService.ping()).resolves.toEqual(iUser);
     });
 
     /*

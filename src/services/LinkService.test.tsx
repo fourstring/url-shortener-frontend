@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom'
-import {linkService, mock, iLink, iPagedData, requestFilterOptions, iLinkInput} from "../mocks/mockClient";
+import {linkService, mock, iLink, iPagedData, iRequestFilterOptions, iLinkInput} from "../mocks/mockClient";
 
 /*
 * 检测 LinkService get 返回值
@@ -51,7 +51,7 @@ describe('LinkService getAll test',() => {
     */
     it("Test normal flow of LinkService getAll",async ()=>{
         mock.onGet('/links').reply(config => {return [200, iPagedData]});
-        await expect(linkService.getAll(requestFilterOptions)).resolves.toEqual(iPagedData);
+        await expect(linkService.getAll(iRequestFilterOptions)).resolves.toEqual(iPagedData);
     });
 
     /*
@@ -61,7 +61,7 @@ describe('LinkService getAll test',() => {
     */
     it('Test error flow of LinkService getAll', async () => {
         mock.onGet('/links').reply(config => {return [500]});
-        await expect(linkService.getAll(requestFilterOptions)).rejects.toThrow();
+        await expect(linkService.getAll(iRequestFilterOptions)).rejects.toThrow();
     })
 })
 
