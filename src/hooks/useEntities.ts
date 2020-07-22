@@ -3,7 +3,6 @@ import {AxiosError} from "axios";
 import {BaseService} from "../services/BaseService";
 import {IEntity} from "../types/IEntity";
 import {Dispatch, Reducer, useEffect, useReducer} from "react";
-import {IPagedData} from "../types/IPage";
 import {IRequestFilterOptions} from "../services/ServiceInterfaces";
 import _ from "lodash";
 import {usePrevious} from "./usePrevious";
@@ -20,7 +19,7 @@ export interface EntitiesState<T> {
     loading: boolean;
     mutating: boolean;
     error: AxiosError<T[]> | null;
-    page: IPagedData<T> | null;
+    count: number | null;
 }
 
 export interface EntitiesResult<T, InputT = T> extends EntitiesState<T> {
@@ -33,7 +32,7 @@ function initEntitiesState<T>(): EntitiesState<T> {
         loading: true,
         mutating: false,
         error: null,
-        page: null
+        count: null
     }
 }
 
@@ -41,18 +40,18 @@ export enum EntitiesStateActionType {
     SET_ENTITIES,
     REPLACE_ENTITIES,
     REMOVE_ENTITIES,
-    SET_ENTITY,
-    REMOVE_ENTITY,
+    // SET_ENTITY,
+    // REMOVE_ENTITY,
     FETCHING_ENTITIES,
     MUTATING_ENTITIES,
     ERROR,
-    NO_ERROR
+    // NO_ERROR
 }
 
 export interface EntitiesStateAction<T, InputT = T> {
     type: EntitiesStateActionType;
     data?: T[] | null;
-    page?: IPagedData<T>  | null;
+    count?: number;
     error?: AxiosError<T[]> | null;
     id?: number;
     ids?: number[];
@@ -60,7 +59,7 @@ export interface EntitiesStateAction<T, InputT = T> {
     inputData?: InputT[];
 }
 
-function entitiesStateReducer<T extends IEntity, InputT = T>(state: EntitiesState<T>, action: EntitiesStateAction<T, InputT>): EntitiesState<T> {
+export function entitiesStateReducer<T extends IEntity, InputT = T>(state: EntitiesState<T>, action: EntitiesStateAction<T, InputT>): EntitiesState<T> {
     let newState = {...state};
     switch (action.type) {
         case EntitiesStateActionType.SET_ENTITIES:
@@ -68,9 +67,6 @@ function entitiesStateReducer<T extends IEntity, InputT = T>(state: EntitiesStat
                 for (let entity of action.data) {
                     newState.entities.set(entity.id, entity);
                 }
-            }
-            if (action.page) {
-                newState.page = action.page;
             }
             newState.loading = false;
             newState.error = null;
@@ -83,8 +79,8 @@ function entitiesStateReducer<T extends IEntity, InputT = T>(state: EntitiesStat
                     newState.entities.set(entity.id, entity);
                 }
             }
-            if (action.page) {
-                newState.page = action.page;
+            if (action.count) {
+                newState.count = action.count;
             }
             newState.loading = false;
             newState.error = null;
@@ -96,27 +92,27 @@ function entitiesStateReducer<T extends IEntity, InputT = T>(state: EntitiesStat
                     newState.entities.delete(id);
                 }
             }
-            newState.page = null;
+            newState.count = null;
             newState.loading = false;
             newState.error = null;
             newState.mutating = false;
             break;
-        case EntitiesStateActionType.SET_ENTITY:
-            if (action.entity && action.id) {
-                newState.entities.set(action.id, action.entity);
-            }
-            newState.loading = false;
-            newState.error = null;
-            newState.mutating = false;
-            break;
-        case EntitiesStateActionType.REMOVE_ENTITY:
-            if (action.id) {
-                newState.entities.delete(action.id);
-            }
-            newState.loading = false;
-            newState.error = null;
-            newState.mutating = false;
-            break;
+        // case EntitiesStateActionType.SET_ENTITY:
+        //     if (action.entity && action.id) {
+        //         newState.entities.set(action.id, action.entity);
+        //     }
+        //     newState.loading = false;
+        //     newState.error = null;
+        //     newState.mutating = false;
+        //     break;
+        // case EntitiesStateActionType.REMOVE_ENTITY:
+        //     if (action.id) {
+        //         newState.entities.delete(action.id);
+        //     }
+        //     newState.loading = false;
+        //     newState.error = null;
+        //     newState.mutating = false;
+        //     break;
         case EntitiesStateActionType.FETCHING_ENTITIES:
             newState.loading = true;
             break;
@@ -129,11 +125,11 @@ function entitiesStateReducer<T extends IEntity, InputT = T>(state: EntitiesStat
             newState.loading = false;
             newState.mutating = false;
             break;
-        case EntitiesStateActionType.NO_ERROR:
-            newState.error = null;
-            newState.loading = false;
-            newState.mutating = false;
-            break;
+        // case EntitiesStateActionType.NO_ERROR:
+        //     newState.error = null;
+        //     newState.loading = false;
+        //     newState.mutating = false;
+        //     break;
     }
     return newState;
 }
@@ -148,7 +144,8 @@ export function useEntities<T extends IEntity, InputT = T>(service: BaseService<
                 let pagedData = await service.getAll(filterOption);
                 dispatch({
                     type: EntitiesStateActionType.REPLACE_ENTITIES,
-                    page: pagedData
+                    count: pagedData.count,
+                    data: pagedData.results,
                 });
             };
             fetchEntities().catch((e)=>{
@@ -212,7 +209,7 @@ export function useEntities<T extends IEntity, InputT = T>(service: BaseService<
         loading: state.loading,
         mutating: state.mutating,
         error: state.error,
-        page: state.page,
+        count: state.count,
         issueMutate: useEntitiesMutate
     }
 }

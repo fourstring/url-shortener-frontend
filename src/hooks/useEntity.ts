@@ -3,9 +3,9 @@ import {Dispatch, Reducer, useEffect, useReducer} from "react";
 import {AxiosError} from "axios";
 
 export enum MutateMethods {
-    POST,
     PUT,
     PATCH,
+    POST,
     DELETE
 }
 
@@ -41,9 +41,9 @@ export enum EntityStateActionType {
     CLEAR_DATA,
     LOADING,
     MUTATING,
-    FINISHED,
+    // FINISHED,
     ERROR,
-    NO_ERROR
+    // NO_ERROR
 }
 
 export interface EntityStateAction<T> {
@@ -75,9 +75,9 @@ function entityStateReducer<T>(state: useEntityState<T>, action: EntityStateActi
         case EntityStateActionType.MUTATING:
             newState.mutating = true;
             break;
-        case EntityStateActionType.FINISHED: // Unused, to avoid duplicate re-rendering.
-            newState.loading = false;
-            break;
+        // case EntityStateActionType.FINISHED: // Unused, to avoid duplicate re-rendering.
+        //     newState.loading = false;
+        //     break;
         case EntityStateActionType.ERROR: // Error thrown during requesting. But request has finished now, so set loading implicitly.
             if (action.error) {
                 newState.error = action.error;
@@ -85,9 +85,9 @@ function entityStateReducer<T>(state: useEntityState<T>, action: EntityStateActi
             newState.loading = false;
             newState.mutating = false;
             break;
-        case EntityStateActionType.NO_ERROR: // Unused, to avoid duplicate re-rendering.
-            newState.error = null;
-            break;
+        // case EntityStateActionType.NO_ERROR: // Unused, to avoid duplicate re-rendering.
+        //     newState.error = null;
+        //     break;
     }
     return newState;
 }
@@ -122,11 +122,6 @@ export function useEntity<T, InputT = T>(id: number, service: BaseService<T, Inp
             case MutateMethods.PATCH:
                 mutateData = async () => {
                     return await service.patch(id as number, data as Partial<InputT>);
-                };
-                break;
-            case MutateMethods.POST:
-                mutateData = async () => {
-                    return await service.post(data as InputT);
                 };
                 break;
             case MutateMethods.PUT:
