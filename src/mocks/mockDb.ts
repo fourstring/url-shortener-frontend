@@ -29,6 +29,70 @@ let link: ILink[] = [
         createAt:"2020-07-20",
         updateAt:"2020-07-20"
     },
+    {
+      id: 3,
+      user:user[1],
+      linkKey: "https://sourl.cn/A7PKCQ",
+      href:"https://nimo.sjtu.edu.cn/",
+      createAt:"2020-07-20",
+      updateAt:"2020-07-20"
+  },
+  {
+      id: 4,
+      user:user[1],
+      linkKey: "https://sourl.cn/NNr96e",
+      href:"https://github.com/fourstring/url-shortener-frontend",
+      createAt:"2020-07-20",
+      updateAt:"2020-07-20"
+  },
+  {
+    id: 5,
+    user:user[1],
+    linkKey: "https://sourl.cn/A7PKCQ",
+    href:"https://nimo.sjtu.edu.cn/",
+    createAt:"2020-07-20",
+    updateAt:"2020-07-20"
+},
+{
+    id: 6,
+    user:user[1],
+    linkKey: "https://sourl.cn/NNr96e",
+    href:"https://github.com/fourstring/url-shortener-frontend",
+    createAt:"2020-07-20",
+    updateAt:"2020-07-20"
+},
+{
+  id: 7,
+  user:user[2],
+  linkKey: "https://sourl.cn/A7PKCQ",
+  href:"https://nimo.sjtu.edu.cn/",
+  createAt:"2020-07-20",
+  updateAt:"2020-07-20"
+},
+{
+  id: 8,
+  user:user[2],
+  linkKey: "https://sourl.cn/NNr96e",
+  href:"https://github.com/fourstring/url-shortener-frontend",
+  createAt:"2020-07-20",
+  updateAt:"2020-07-20"
+},
+{
+  id: 9,
+  user:user[3],
+  linkKey: "https://sourl.cn/A7PKCQ",
+  href:"https://nimo.sjtu.edu.cn/",
+  createAt:"2020-07-20",
+  updateAt:"2020-07-20"
+},
+{
+  id: 10,
+  user:user[3],
+  linkKey: "https://sourl.cn/NNr96e",
+  href:"https://github.com/fourstring/url-shortener-frontend",
+  createAt:"2020-07-20",
+  updateAt:"2020-07-20"
+},
 ];
 
 let userDb = new Map<number, IUser>();

@@ -25,14 +25,14 @@ export class AuthService {
   }
 
   async ping(): Promise<IUser | null> {
-    try {
-      let result = await this.client.get<IUser>('/auth/ping');
-      return result.data;
-    } catch (e) {
-      if (!(e.isAxiosError && e.response.status === 403)) {
-        throw e;
-      }
-    }
+    // try {
+    //   let result = await this.client.get<IUser>('/auth/ping');
+    //   return result.data;
+    // } catch (e) {
+    //   if (!(e.isAxiosError && e.response.status === 403)) {
+    //     throw e;
+    //   }
+    // }
     return null;
   }
 

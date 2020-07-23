@@ -3,6 +3,7 @@ import {Router} from "./router";
 import {UserContext} from "./contexts/UserContext";
 import {IUser} from "./types/IUser";
 import {authService} from "./services/AuthService";
+import {LinksView} from './views/LinksView';
 
 function App() {
   const [user, setUser] = useState<IUser | null>(null);
