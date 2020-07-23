@@ -183,22 +183,32 @@ function getByDeepText(text: string) {
 
 使用时直接调用 `fireEvent.click(getByDeepText('your text'))` 来执行组件的点击。
 
-### 如何设置以及测试当前 `url`
 
-如果测试依赖 `url` 的组件，可以使用：
+### 如何进行路由相关的交互测试
 
-```javascript
-import { MemoryRouter } from 'react-router';
-render(
-    <MemoryRouter initialEntries={["/"]}> # "/"是要模拟的url
-    	<NavBar/>
-   	</MemoryRouter>
-);
-```
+`react-router-dom`提供的各种`Router`的区别在于其底层绑定的`history`对象的类型不同，如`BrowserRouter`底层绑定的`history`对象是浏览器提供的API，用于测试的`MemoryRouter`底层绑定的对象是`MemoryHistory`。
 
-检查现在的 `url` 必须使用 `global`，省略该参数会得到null
+该库提供的这些Router组件均只会去监听它们所绑定的history对象的变化，而在测试中，我们常常希望通过测试代码操控当前路由，这就要求我们能访问这些Router底层的history对象，但对于上述封装了创建`history`对象过程的组件，我们只有在组件中使用`useHistory`hook才能获取到它们所绑定的`history`对象，这是不太方便的。
 
-```javascript
-expect(global.window.location.pathname).toEqual('/links');
+在测试中，我们可以使用该库提供的`Router`基组件，它接受一个名为`history`的prop，值为要绑定的history对象。我们可以使用`history`库的`createMemoryHistory`函数创建一个`MemoryHistory`对象并绑定到`Router`组件上。为了和我们实现的声明式路由器组件区分，我们在导入库提供的`Router`组件时把它as为`BasicRouter`。
+通过`history`对象也可以访问当前路由，`history.location.pathname`。
+
+具体可以参考`Router.test.tsx`中的测试代码，例如：
+```typescript jsx
+const history = createMemoryHistory({
+  initialEntries: ['/']
+});
+const {getByText} = render(<BasicRouter history={history}>
+  <Router routes={routes}/>
+</BasicRouter>);
+expect(getByText(/1/i)).toBeInTheDocument();
+act(() => {
+  history.push('/t1');
+});
+expect(getByText(/2/i)).toBeInTheDocument();
+act(() => {
+  history.push('/t2');
+});
+expect(getByText(/3/i)).toBeInTheDocument();
 ```
 
