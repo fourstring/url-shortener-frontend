@@ -6,6 +6,6 @@ let client = axios.create();
 let mock = new MockAdapter(client);
 export const baseService = new BaseService<string>(client);
 
-export{
-    mock
+export {
+  mock
 }
