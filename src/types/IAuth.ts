@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {IUser} from "./IUser";
 
 export interface ILoginCredential {
@@ -16,3 +17,23 @@ export interface ILoginCredential {
     csrfToken: string;
     accessToken: string;
   }
+=======
+import {IUser} from "./IUser";
+
+export interface IAuthCredential {
+  username: string;
+  password: string;
+}
+
+export interface IAuthRespData {
+  user: IUser;
+  accessToken: string;
+  csrfToken: string;
+}
+
+export interface IRegisterCredential {
+  username: string;
+  password: string;
+  email: string;
+}
+>>>>>>> dev
