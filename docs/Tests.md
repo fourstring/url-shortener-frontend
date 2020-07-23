@@ -150,3 +150,65 @@ beforeEach(() => {
 不使用`clearAllMocks`是为了可能的其他mock模块的考虑。
 
 另外WebStorm等的代码提示是基于正常浏览器/Node环境而非Jest测试环境，因此会提示不存在`mockClear`方法，忽略该提示或使用`// @ts-suppress`屏蔽即可。
+
+### 如何点击组件进行测试
+
+在测试 `点击` 效果的时候，我们使用 `fireEvent.click(screen.getByText(“Hello world”))` 来寻找内容为 `“Hello world”`的组件，但一个可能会遇到的问题是：
+
+```
+Unable to find an element with the text: Hello world.
+This could be because the text is broken up by multiple elements.
+In this case, you can provide a function for your text
+matcher to make your matcher more flexible.
+```
+
+这是因为当text被包裹在深层的组件里时（如下图，“我的短连接”被包裹在 `<span></span>` 中），会出现寻找不到该组件的情况。而使用其他关键字来寻找是一件很麻烦的事。
+
+<img src="https://i.loli.net/2020/07/22/jN9wvb6fuexGmzg.png" alt="image-20200722171349265" style="zoom:150%;" />
+
+实际上，我们的 `screen.getByText` 不仅支持传递参数，也支持传递一个函数来作为`matcher`对组件进行删选，所以我们实现一个自定义的 `getByDeepText` 函数来寻找深层内容符合我们预期的组件
+
+```javascript
+function getByDeepText(text: string) {
+    return screen.getByText((content: string, node: Element) => {
+        const hasText = (node: Element) => node.textContent === text;
+        const nodeHasText = hasText(node);
+        const childrenDontHaveText = Array.from(node.children).every(
+            (child: Element) => !hasText(child)
+        );
+        return nodeHasText && childrenDontHaveText;
+    });
+}
+```
+
+使用时直接调用 `fireEvent.click(getByDeepText('your text'))` 来执行组件的点击。
+
+
+### 如何进行路由相关的交互测试
+
+`react-router-dom`提供的各种`Router`的区别在于其底层绑定的`history`对象的类型不同，如`BrowserRouter`底层绑定的`history`对象是浏览器提供的API，用于测试的`MemoryRouter`底层绑定的对象是`MemoryHistory`。
+
+该库提供的这些Router组件均只会去监听它们所绑定的history对象的变化，而在测试中，我们常常希望通过测试代码操控当前路由，这就要求我们能访问这些Router底层的history对象，但对于上述封装了创建`history`对象过程的组件，我们只有在组件中使用`useHistory`hook才能获取到它们所绑定的`history`对象，这是不太方便的。
+
+在测试中，我们可以使用该库提供的`Router`基组件，它接受一个名为`history`的prop，值为要绑定的history对象。我们可以使用`history`库的`createMemoryHistory`函数创建一个`MemoryHistory`对象并绑定到`Router`组件上。为了和我们实现的声明式路由器组件区分，我们在导入库提供的`Router`组件时把它as为`BasicRouter`。
+通过`history`对象也可以访问当前路由，`history.location.pathname`。
+
+具体可以参考`Router.test.tsx`中的测试代码，例如：
+```typescript jsx
+const history = createMemoryHistory({
+  initialEntries: ['/']
+});
+const {getByText} = render(<BasicRouter history={history}>
+  <Router routes={routes}/>
+</BasicRouter>);
+expect(getByText(/1/i)).toBeInTheDocument();
+act(() => {
+  history.push('/t1');
+});
+expect(getByText(/2/i)).toBeInTheDocument();
+act(() => {
+  history.push('/t2');
+});
+expect(getByText(/3/i)).toBeInTheDocument();
+```
+
