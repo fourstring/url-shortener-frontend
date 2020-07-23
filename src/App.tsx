@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {Router} from "./router";
+import {Router} from "./router/Router";
+import {routes} from './routes'
 import {UserContext} from "./contexts/UserContext";
 import {IUser} from "./types/IUser";
 import {authService} from "./services/AuthService";
+import {BrowserRouter} from 'react-router-dom';
 
 function App() {
   const [user, setUser] = useState<IUser | null>(null);
@@ -12,7 +14,9 @@ function App() {
 
   return (
     <UserContext.Provider value={{user, setUser}}>
-      <Router/>
+      <BrowserRouter>
+        <Router routes={routes}/>
+      </BrowserRouter>
     </UserContext.Provider>
   )
 }
