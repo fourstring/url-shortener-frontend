@@ -1,4 +1,5 @@
 import {IUser} from "./IUser";
+import * as H from 'history';
 
 export interface IAuthCredential {
   username: string;
@@ -15,4 +16,8 @@ export interface IRegisterCredential {
   username: string;
   password: string;
   email: string;
+}
+
+export interface IAuthRedirectState {
+  from: Partial<H.Location>;
 }
