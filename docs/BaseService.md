@@ -41,9 +41,9 @@ export interface IBaseService<T, InputT = T> {
 ### 错误处理
 Service仅封装数据获取逻辑，所以我们将错误处理逻辑留到更高层的抽象（hooks）或调用层完成。当后端返回4xx/5xx状态码时，Axios会抛出AxiosError异常，可以捕获该异常进行处理。
 ### constructor(client?:AxiosInstance);
-若传入`client`参数，则使用所传入的对象，否则使用全局定义的普通`client`。
+若传入`client`参数，则使用所传入的对象，否则根据`globalE2EMock`是否定义，分别使用`globalE2EMockClient`或正常功能的全局`client`作为`this.client`。
 
-如此设计主要是为了单元测试之便利，因为测试不同的代码所需的mock响应定义可能不同，因此使用一个全局的mockClient是一个灵活度较低的设计。此种设计下在不同的单元测试中可根据测试需求定义不同的mock client传入，更便于测试代码的组织。
+有三种测试将用到网络请求：单元测试、端到端mock测试、前后端联调测试，它们对网络请求的需求不同。单元测试为了测试代码中不同的分支，每组测试可能都需要不同的mock设置，需要高灵活性，因此我们设计了`client`形参，以便单元测试时传入专门定义的mock client；端到端mock测试通常仅需要一个mock client以及一组mock数据，因为不可能在实际应用代码中再去使用手动传入client的Service，只能准备尽可能全面的mock数据，因此我们定义了`globalE2EMock`以及`globalE2EMockClient`配置选项以满足此种需求，同时因为该过程封装在构造函数中，故正常网络功能与mock网络功能的切换对于应用代码是透明的，仅需要修改配置文件即可；至于前后端联调测试显然需要正常的网络功能，我们只需禁用`globalE2EMock`配置选项即可。
 ### get(id: number): Promise\<T\>;
 GET请求`config.baseURL/endpoint/${id}`，并返回后端所返回的数据。如：请求`http://localhost:8080/links/1` ,即表示获取id为1的Link数据。
 
