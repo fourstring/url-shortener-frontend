@@ -2,12 +2,19 @@ import {AxiosInstance} from "axios";
 import {IAuthCredential, IAuthRespData, IRegisterCredential} from "../types/IAuth";
 import {IUser} from "../types/IUser";
 import {client as normalClient} from "../utils/network";
+import config from "../config";
 
 export class AuthService {
   client: AxiosInstance;
 
-  constructor(client ?: AxiosInstance) {
-    this.client = client || normalClient;
+  constructor(client ?: AxiosInstance){
+    if(client){
+      this.client = client;
+    }else if(config.globalE2EMock){
+      this.client = config.globalE2EMockClient;
+    }else{
+      this.client = normalClient;
+    }
   }
 
   async login(cred: IAuthCredential): Promise<IUser> {
