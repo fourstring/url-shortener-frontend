@@ -3,13 +3,12 @@ import {MutateMethods} from "./useEntity";
 import {act, renderHook} from '@testing-library/react-hooks'
 import {ILink, ILinkInput} from "../types/ILink";
 import {
-  testAdapter,
   testLink,
   testLinkList,
-  testLinkService,
   testPagedData,
   testRequestFilterOptions
 } from '../mocks/testData';
+import {testAdapter, testLinkService} from '../mocks/testClient'
 
 const mutatorData: ILink[] | Partial<ILinkInput>[] = [{user: 1, href: 'href'}]
 

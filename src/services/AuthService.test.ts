@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom'
-import {testAdapter, testAuthService, testUser} from "../mocks/testData";
+import {testAdapter, testAuthService} from "../mocks/testClient";
+import {testUser} from "../mocks/testData";
 
 beforeEach(() => {
   // @ts-ignore
