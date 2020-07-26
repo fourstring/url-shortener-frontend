@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.8.4",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "@svgr/webpack": "4.3.3",
     "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
+    "@testing-library/react": "^10.4.7",
     "@testing-library/react-hooks": "^3.3.0",
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^24.0.0",
@@ -47,6 +49,7 @@
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.2",
     "lodash": "^4.17.19",
+    "material-table": "^1.66.0",
     "mini-css-extract-plugin": "0.9.0",
     "mockjs": "^1.1.0",
     "moment": "^2.27.0",
@@ -155,6 +158,7 @@
     ]
   },
   "devDependencies": {
+    "eslint-plugin-cypress": "^2.11.1",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jest-localstorage-mock": "^2.4.3",
     "react-test-renderer": "16.13.1"
