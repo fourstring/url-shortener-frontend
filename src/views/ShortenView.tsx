@@ -36,13 +36,14 @@ export function ShortenView() {
   let history = useHistory();
 
   async function handleShorten() {
-    console.log(user);
+    // await setUser(null);
     // setUser({id: 1, username: 'string', email: "user@example.com"});
     if (user) {
       let resp = await linkService.post({user: user?.id, href: value});
-      setShort(resp.linkKey);
+      setShort('短链接 : ' + resp.linkKey);
+      console.log(user);
     } else {
-      alert('请先登录！');
+      setShort('请先登录！' );
     }
   }
 
@@ -50,7 +51,7 @@ export function ShortenView() {
     if (user) {
       history.push("/links");
     } else {
-      alert('请先登录！');
+      setShort('请先登录！' );
     }
 
   }
@@ -108,7 +109,7 @@ export function ShortenView() {
               </Grid>
               <Grid item xs={12}>
                 <Card>
-                  短链接: {short}
+                  {short}
                 </Card>
               </Grid>
             </Grid>

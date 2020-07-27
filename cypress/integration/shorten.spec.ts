@@ -18,7 +18,6 @@ describe('Test shorten function', function() {
     cy.contains('原链接')
     cy.contains('生成短链接')
     cy.contains('查看所有短链接')
-    cy.contains('短链接: ')
   })
 });
 
@@ -40,11 +39,12 @@ describe('Test shorten function when not login', function() {
     cy.on('window:alert', stub)
     cy.get('#shortenButton').click()
       .then(() => {
-        expect(stub.getCall(0)).to.be.calledWith('请先登录！')
+        cy.contains('请先登录！')
       })
+    cy.visit("/shorten");
     cy.get('#showAllButton').click()
       .then(() => {
-        expect(stub.getCall(1)).to.be.calledWith('请先登录！')
+        cy.contains('请先登录！')
       })
   })
 });

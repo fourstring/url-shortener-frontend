@@ -16,5 +16,12 @@ export const routes: IRoute[] = [
     metadata: {
       displayText: "所有链接"
     }
+  },
+  {
+    path: '/login',
+    component: <ShortenView/>,
+    metadata: {
+      displayText: "登录"
+    }
   }
 ];
