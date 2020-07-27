@@ -6,6 +6,10 @@
 * @author wfn
 */
 // @ts-ignore
+const cy = Cypress.cy;
+// @ts-ignore
+const baseUrl = Cypress.config().baseUrl;
+
 describe('NavBer e2e test', () => {
   /*
   * NavBer 正确渲染测试
@@ -44,7 +48,31 @@ describe('NavBer e2e test', () => {
       .contains('我的短链接')
     cy.contains('首页').click()
     cy.url()                   // 8.
-      .should('eq', Cypress.config().baseUrl+'/');
+      .should('eq', baseUrl+'/');
     cy.get('.Mui-selected').contains('首页')
+  })
+
+  /*
+  * UserIndicator 测试
+  * 检测点击头像后正确显示相应的用户菜单
+  * @author wfn
+  */
+  it('should open menu if click avatar',() => {
+    cy.get('.MuiAvatar-root').click();
+    cy.get('.MuiList-root')
+      .should("be.visible");
+  })
+
+  /*
+  * UserIndicator 测试
+  * 检测点击空白处后原先的用户菜单隐藏
+  * @author wfn
+  */
+  it('should close menu if click blank',() => {
+    cy.get('.MuiPopover-root').click()
+    cy.contains('我的信息')
+      .should("not.be.visible");
+    cy.contains('退出登录')
+      .should("not.be.visible");
   })
 })
