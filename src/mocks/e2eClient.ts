@@ -7,6 +7,6 @@ let globalE2EMockClient = axios.create({
   baseURL: baseURL,
 });
 
-let Adapter = new MockAdapter(globalE2EMockClient);
+let Adapter = new MockAdapter(globalE2EMockClient, {delayResponse: 1000});
 
 export {globalE2EMockClient,Adapter}

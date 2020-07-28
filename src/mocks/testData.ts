@@ -50,4 +50,4 @@ export const testRequestFilterOptions: IRequestFilterOptions<ILink> = {
   fields: []
 };
 
-export {testAdapter}
+export {testAdapter,testClient}
