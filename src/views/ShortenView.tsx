@@ -49,7 +49,7 @@ export function ShortenView() {
 
   function handleShowAll() {
     if (user) {
-      history.push("/links");
+      history.replace("/links");
     } else {
       setShort('请先登录！' );
     }
@@ -108,7 +108,7 @@ export function ShortenView() {
                 </Button>
               </Grid>
               <Grid item xs={12}>
-                <Card>
+                <Card id='shortText'>
                   {short}
                 </Card>
               </Grid>
