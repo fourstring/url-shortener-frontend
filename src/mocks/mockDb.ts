@@ -16,7 +16,7 @@ let link: ILink[] = [
   {
     id: 1,
     user: user[0],
-    linkKey: "https://sourl.cn/A7PKCQ",
+    linkKey: "https://sourl.cn",
     href: "https://nimo.sjtu.edu.cn/",
     createAt: "2020-07-20",
     updateAt: "2020-07-20"
@@ -34,8 +34,8 @@ let link: ILink[] = [
     user: user[1],
     linkKey: "https://sourl.cn/A7PKCQ",
     href: "https://nimo.sjtu.edu.cn/",
-    createAt: "2020-07-20",
-    updateAt: "2020-07-20"
+    createAt: "2020-07-21",
+    updateAt: "2020-07-21"
   },
   {
     id: 4,

@@ -2,42 +2,35 @@ import React from "react";
 import {ILink} from "../types/ILink";
 import {
     Avatar,
-    Checkbox,
     ListItem as LItem,
     ListItemAvatar,
-    ListItemSecondaryAction,
-    ListItemText
+    ListItemText,
 } from "@material-ui/core";
+import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
+
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      height: 100,
+    },
+    text: {
+      marginLeft: 0,
+      overflow:"hidden",
+    },
+  }),
+);
 
 export function ListItem(props: React.PropsWithoutRef<{ item: ILink }>) {
-  const [checked, setChecked] = React.useState([1]);
+  const classes = useStyles();
   const {item} = props;
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
+  
   return (
-    <LItem key={item.id} style={{height: 120}}>
+    <LItem key={item.id} className={classes.root}>
       <ListItemAvatar>
-        <Avatar
-        />
+        <Avatar/>
       </ListItemAvatar>
-      <ListItemText style={{marginLeft: 0}} primary={item.linkKey} secondary={item.href}/>
-      <ListItemSecondaryAction>
-        <Checkbox
-          edge="end"
-          onChange={handleToggle(item.id)}
-          checked={checked.indexOf(item.id) !== -1}
-        />
-      </ListItemSecondaryAction>
+      <ListItemText className={classes.text} primary={item.linkKey} secondary={item.href}/>        
     </LItem>
 
   )

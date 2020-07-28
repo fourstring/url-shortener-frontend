@@ -2,12 +2,19 @@ import {AxiosInstance} from "axios";
 import {IAuthCredential, IAuthRespData, IRegisterCredential} from "../types/IAuth";
 import {IUser} from "../types/IUser";
 import {client as normalClient} from "../utils/network";
+import config from "../config";
 
 export class AuthService {
   client: AxiosInstance;
 
   constructor(client ?: AxiosInstance) {
-    this.client = client || normalClient;
+    if(client){
+      this.client = client;
+    }else if(config.globalE2EMock){
+      this.client = config.globalE2EMockClient;
+    }else{
+      this.client = normalClient;
+    }
   }
 
   async login(cred: IAuthCredential): Promise<IUser> {
@@ -25,14 +32,14 @@ export class AuthService {
   }
 
   async ping(): Promise<IUser | null> {
-    // try {
-    //   let result = await this.client.get<IUser>('/auth/ping');
-    //   return result.data;
-    // } catch (e) {
-    //   if (!(e.isAxiosError && e.response.status === 403)) {
-    //     throw e;
-    //   }
-    // }
+    try {
+      let result = await this.client.get<IUser>('/auth/ping');
+      return result.data;
+    } catch (e) {
+      if (!(e.isAxiosError && e.response.status === 403)) {
+        throw e;
+      }
+    }
     return null;
   }
 
