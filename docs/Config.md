@@ -22,3 +22,13 @@ export default {
 **AxiosInstance**
 
 若`globalE2EMock`为true，则所有Service类在未提供`client`构造函数参数的情况下默认使用该mock client；否则在未提供`client`的情况下使用正常功能`client`（如生产构建、前后端联调等情况）。
+
+## jwtMonitorRate
+**number**
+控制`jwtMonitor`在需要定时执行的情况下定时执行的频率，单位为毫秒，详见Token文档。
+
+## jwtRefreshThreshold
+**number**
+
+控制现有的`access_token`距其失效前还有多少秒时应当发起刷新请求，单位为秒。我们建议值为`120`.
+
