@@ -39,9 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export function LinksView() {
   const classes = useStyles();
   const {entities, loading, issueMutate} = useEntities<ILink, ILinkInput>(linkService);
-
-  console.log(entities);
-
+  
   function renderItems() {
     let items: JSX.Element[] = [];
     for (const [key, value] of entities.entries()) {
@@ -61,14 +59,13 @@ export function LinksView() {
   }
 
   function handleDelete(id: number): void {
-    let tmp: number[] = []
-    tmp[0] = id;
+    let tmp: number[] = [id];
     issueMutate({method: MutateMethods.DELETE, ids: tmp});
   }
 
   return (
     <>
-      {loading && <CircularProgress/>}
+      {loading && <CircularProgress className={classes.loadingIndicator}/>}
       {!loading && <List dense className={classes.root}>
         {renderItems()}
       </List>}

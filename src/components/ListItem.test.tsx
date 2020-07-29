@@ -2,7 +2,6 @@ import React from "react";
 import {ListItem} from "./ListItem"
 import {link} from "../mocks/mockDb";
 import {
-    Avatar,
     List
 } from "@material-ui/core";
 import {render} from "@testing-library/react";
