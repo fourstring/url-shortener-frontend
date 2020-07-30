@@ -28,7 +28,7 @@ export function ListItem(props: React.PropsWithoutRef<{ item: ILink }>) {
       </ListItemAvatar>
       <ListItemText className={classes.text} primary={linkService.buildShortenLink(item.linkKey)}
                     secondary={item.href}/>
-      <h6 style={{marginRight: 0, color: "grey"}}>创建时间: {item.createAt}</h6>
+      {/*<h6 style={{marginRight: 0, color: "grey"}}>创建时间: {item.createAt}</h6>*/}
     </LItem>
   )
 }

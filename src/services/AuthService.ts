@@ -8,12 +8,12 @@ import {monitorId, setMonitorId} from '../utils/jwtMonitor';
 export class AuthService {
   client: AxiosInstance;
 
-  constructor(client ?: AxiosInstance){
-    if(client){
+  constructor(client ?: AxiosInstance) {
+    if (client) {
       this.client = client;
-    }else if(config.globalE2EMock){
+    } else if (config.globalE2EMock) {
       this.client = config.globalE2EMockClient;
-    }else{
+    } else {
       this.client = normalClient;
     }
   }
@@ -29,7 +29,7 @@ export class AuthService {
     let result = await this.client.get('/auth/logout');
     localStorage.removeItem('access_token'); // Clear accessToken stored.
     localStorage.removeItem('csrf_token'); // Clear csrfToken stored.
-    if (monitorId){
+    if (monitorId) {
       window.clearInterval(monitorId);
       setMonitorId(0);
     }
