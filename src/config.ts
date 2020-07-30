@@ -5,5 +5,6 @@ export default {
   globalE2EMock: false,
   globalE2EMockClient: globalE2EMockClient,
   jwtMonitorRate: 60000, //ms
-  jwtRefreshThreshold: 120 //s
+  jwtRefreshThreshold: 120, //s
+  shortenLinkBaseURL: 'https://api.fourstring.dev'
 }

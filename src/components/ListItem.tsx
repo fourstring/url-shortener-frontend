@@ -2,6 +2,7 @@ import React from "react";
 import {ILink} from "../types/ILink";
 import {Avatar, ListItem as LItem, ListItemAvatar, ListItemText,} from "@material-ui/core";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
+import {linkService} from "../services/LinkService";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,7 +26,8 @@ export function ListItem(props: React.PropsWithoutRef<{ item: ILink }>) {
       <ListItemAvatar>
         <Avatar/>
       </ListItemAvatar>
-      <ListItemText className={classes.text} primary={item.linkKey} secondary={item.href}/>
+      <ListItemText className={classes.text} primary={linkService.buildShortenLink(item.linkKey)}
+                    secondary={item.href}/>
       <h6 style={{marginRight: 0, color: "grey"}}>创建时间: {item.createAt}</h6>
     </LItem>
   )

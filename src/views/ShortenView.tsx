@@ -1,5 +1,15 @@
 import React, {useContext, useState} from 'react';
-import {makeStyles, Grid, Container, Typography, TextField, CssBaseline, Paper, Button, InputAdornment, Card} from '@material-ui/core';
+import {
+  Button,
+  Card,
+  Container,
+  CssBaseline,
+  Grid,
+  InputAdornment,
+  makeStyles,
+  TextField,
+  Typography
+} from '@material-ui/core';
 import {Link} from '@material-ui/icons';
 import {useHistory} from "react-router-dom";
 import {linkService} from "../services/LinkService";
@@ -40,10 +50,10 @@ export function ShortenView() {
     // setUser({id: 1, username: 'string', email: "user@example.com"});
     if (user) {
       let resp = await linkService.post({user: user?.id, href: value});
-      setShort('短链接 : ' + resp.linkKey);
+      setShort('短链接 : ' + linkService.buildShortenLink(resp.linkKey));
       console.log(user);
     } else {
-      setShort('请先登录！' );
+      setShort('请先登录！');
     }
   }
 
@@ -51,7 +61,7 @@ export function ShortenView() {
     if (user) {
       history.replace("/links");
     } else {
-      setShort('请先登录！' );
+      setShort('请先登录！');
     }
 
   }
@@ -59,7 +69,7 @@ export function ShortenView() {
   return (
     <>
       <Container component="main" maxWidth="xs">
-        <CssBaseline />
+        <CssBaseline/>
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
             缩短链接
@@ -77,7 +87,7 @@ export function ShortenView() {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Link />
+                    <Link/>
                   </InputAdornment>
                 ),
               }}
@@ -90,7 +100,9 @@ export function ShortenView() {
                   variant="contained"
                   color="primary"
                   className={classes.submit}
-                  onClick={() => {handleShorten()}}
+                  onClick={() => {
+                    handleShorten()
+                  }}
                 >
                   生成短链接
                 </Button>
@@ -102,7 +114,9 @@ export function ShortenView() {
                   variant="contained"
                   color="secondary"
                   className={classes.submit}
-                  onClick={() => {handleShowAll()}}
+                  onClick={() => {
+                    handleShowAll()
+                  }}
                 >
                   查看所有短链接
                 </Button>
