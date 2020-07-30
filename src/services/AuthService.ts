@@ -5,7 +5,6 @@ import {client as normalClient} from "../utils/network";
 import config from "../config";
 import {monitorId, setMonitorId} from '../utils/jwtMonitor';
 
-
 export class AuthService {
   client: AxiosInstance;
 
