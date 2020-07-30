@@ -1,8 +1,15 @@
+import {IRoute} from "./types/IRouter";
+import {ShortenView} from './views/ShortenView'
 import React from "react";
-import {LinksView} from "./views/LinksView";
-import {IRoute} from "./types/IRouter"
 
 export const routes: IRoute[] = [
+  {
+    path: '/shorten',
+    component: <ShortenView/>,
+    metadata: {
+      displayText: "缩短链接"
+    }
+  },
   {
     path: '/links',
     subRoutes: [
@@ -14,5 +21,12 @@ export const routes: IRoute[] = [
         }
       }
     ]
+  },
+  {
+    path: '/login',
+    component: <ShortenView/>,
+    metadata: {
+      displayText: "登录"
+    }
   }
 ];

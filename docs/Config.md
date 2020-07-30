@@ -13,9 +13,22 @@ export default {
 **string**
 
 配置axios应当使用的baseURL，亦即后端的最高级URL，如`http://localhost:8080`，而具体某个endpoint具有如下格式：`http://localhost:8080/endpoint `。
-## globalMock（已废弃）
+## globalE2EMock
 **boolean**
 
-配置Service是否应默认使用经过`axios-mock-adapter`处理的mock client，而非使用普通axios client，以便于测试等目的。
+配置Service是否开启端到端mock测试模式，即默认使用为端到端mock测试准备的`globalE2EMockClient`以及mock数据。
 
-**已废弃**:在新的[BaseService设计](https://github.com/fourstring/url-shortener-frontend/blob/dev/docs/Tests.md#%E5%A6%82%E4%BD%95mock%E6%B5%8B%E8%AF%95service%E7%9A%84%E4%B8%8D%E5%90%8C%E9%80%BB%E8%BE%91) 下该配置参数已经失去意义。
+## globalE2EMockClient
+**AxiosInstance**
+
+若`globalE2EMock`为true，则所有Service类在未提供`client`构造函数参数的情况下默认使用该mock client；否则在未提供`client`的情况下使用正常功能`client`（如生产构建、前后端联调等情况）。
+
+## jwtMonitorRate
+**number**
+控制`jwtMonitor`在需要定时执行的情况下定时执行的频率，单位为毫秒，详见Token文档。
+
+## jwtRefreshThreshold
+**number**
+
+控制现有的`access_token`距其失效前还有多少秒时应当发起刷新请求，单位为秒。我们建议值为`120`.
+

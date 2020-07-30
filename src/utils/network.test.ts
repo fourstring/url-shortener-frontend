@@ -1,5 +1,4 @@
 import {client} from './network'
-
 /*
 * 测试 interceptor 设置正确
 * 检查 client 在 localStorage 值为空和不为空时成功设置

@@ -1,6 +1,6 @@
 import {MutateMethods, useEntity, useEntityResult} from './useEntity';
 import {act, renderHook} from '@testing-library/react-hooks'
-import {testAdapter, testBaseService} from '../mocks/testData'
+import {testAdapter, testBaseService} from '../mocks/testClient'
 
 function testResultBeforeUpdate(result: useEntityResult<string, string>) {
   expect(result.data).toBeNull();

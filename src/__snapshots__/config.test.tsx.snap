@@ -5,5 +5,7 @@ Object {
   "baseURL": "http://localhost:8080",
   "globalE2EMock": true,
   "globalE2EMockClient": [Function],
+  "jwtMonitorRate": 60000,
+  "jwtRefreshThreshold": 120,
 }
 `;

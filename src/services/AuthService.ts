@@ -3,11 +3,12 @@ import {IAuthCredential, IAuthRespData, IRegisterCredential} from "../types/IAut
 import {IUser} from "../types/IUser";
 import {client as normalClient} from "../utils/network";
 import config from "../config";
+import {monitorId, setMonitorId} from '../utils/jwtMonitor';
 
 export class AuthService {
   client: AxiosInstance;
 
-  constructor(client ?: AxiosInstance) {
+  constructor(client ?: AxiosInstance){
     if(client){
       this.client = client;
     }else if(config.globalE2EMock){
@@ -28,6 +29,10 @@ export class AuthService {
     let result = await this.client.get('/auth/logout');
     localStorage.removeItem('access_token'); // Clear accessToken stored.
     localStorage.removeItem('csrf_token'); // Clear csrfToken stored.
+    if (monitorId){
+      window.clearInterval(monitorId);
+      setMonitorId(0);
+    }
     return result.status === 200;
   }
 
