@@ -16,21 +16,21 @@ export const testLink: ILink = {
   href: "string",
   createAt: "string",
   updateAt: "string"
-}
+};
 
 export const testLinkList: ILink[] = [
   testLink
-]
+];
 
 export const testPagedData: IPagedData<ILink> = {
   count: 10,
   results: testLinkList,
-}
+};
 
 export const testLinkInput = {
   user: 1,
   href: "string",
-}
+};
 
 export const testRequestFilterOptions: IRequestFilterOptions<ILink> = {
   page: 1,

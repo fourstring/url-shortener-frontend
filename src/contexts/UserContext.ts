@@ -7,3 +7,4 @@ export interface UserContextType {
 }
 
 export const UserContext = React.createContext<UserContextType | null>(null);
+
