@@ -13,7 +13,7 @@ jobs:
       - name: Run unit tests
         run: npm run-script test --coverage
       - name: Run E2E tests
-        use: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v2
       - name: Upload test results
         uses: actions/upload-artifact@v2
         with:
