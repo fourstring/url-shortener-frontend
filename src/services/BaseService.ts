@@ -11,19 +11,31 @@ export class BaseService<T, InputT = T> implements EntityService<T, InputT> {
   client: AxiosInstance;
 
   constructor(client ?: AxiosInstance) {
-    if(client){
+    if (client) {
       this.client = client;
-    }else if(config.globalE2EMock){
+    } else if (config.globalE2EMock) {
       this.client = config.globalE2EMockClient;
-    }else{
+    } else {
       this.client = normalClient;
     }
+  }
+
+  buildParams(filter: IRequestFilterOptions<T>): Record<string, string | number> {
+    let params: Record<string, string | number> = {};
+    for (let [key, value] of Object.entries(filter)) {
+      if (key === "fields") {
+        params[key] = value.join(',');
+      } else {
+        params[key] = value;
+      }
+    }
+    return params;
   }
 
   async delete(id: number): Promise<boolean> {
     let fullUrl: string = urljoin(this.endpoint, `${id}`);
     let result = await this.client.delete<T>(fullUrl);
-    return result.status === 200;
+    return result.status >= 200 && result.status <= 299;
   }
 
   async get(id: number): Promise<T> {
@@ -33,9 +45,8 @@ export class BaseService<T, InputT = T> implements EntityService<T, InputT> {
   }
 
   async getAll(filterOption?: IRequestFilterOptions<T>): Promise<IPagedData<T>> {
-    let {...params} = filterOption;
     let result = await this.client.get<IPagedData<T>>(this.endpoint, {
-      params
+      params: filterOption ? this.buildParams(filterOption) : {}
     });
     return result.data;
   }
