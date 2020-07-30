@@ -1,12 +1,11 @@
 import '@testing-library/jest-dom'
 import {
-  testAdapter,
   testLink,
   testLinkInput,
-  testLinkService,
   testPagedData,
   testRequestFilterOptions
 } from "../mocks/testData";
+import {testLinkService, testAdapter} from "../mocks/testClient"
 
 /*
 * 检测 LinkService get 返回值

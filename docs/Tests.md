@@ -212,6 +212,51 @@ act(() => {
 expect(getByText(/3/i)).toBeInTheDocument();
 ```
 
+### 如何利用wait和act去等待组件渲染
+
+`waitForDomToBeChange` 函数已经被删除，如果想要简单的等待再次渲染，可以直接使用 `await waitFor(() => {})`来代替
+
+act、wait怎么组合可以参考 [react-testing-library-and-the-not-wrapped-in-act-errors](https://medium.com/@davidwcai/react-testing-library-and-the-not-wrapped-in-act-errors-491a5629193b)
+
+### 如何在无法利用组件判断跳转完成时检测路由跳转
+
+有时会出现无法判断跳转后页面渲染完成，从而不能确认何时检测路由的值的情况，我们可以通过 mock 一个 `history.replace()`函数，然后通过检查该函数如何被调用来实现对路由跳转的检测
+
+通过参考这个实现 [mock useHistory](https://github.com/mrdulin/jest-codelab/blob/master/src/stackoverflow/58524183/NotFound.test.jsx)(虽然不能直接用但思路可以参考), 改写我们测试中可用的 mock 方法：
+
+```tsx
+const mockHistoryReplace = jest.fn();
+const history = createMemoryHistory({
+  initialEntries: ['/'],
+});
+history.replace = mockHistoryReplace;
+const {getByPlaceholderText, getByText} = render(
+    <BasicRouter history={history}>
+      </>
+    </BasicRouter>
+)
+```
+
+接着检查:
+
+```tsx
+await waitFor(() => {
+   expect(mockHistoryReplace).toHaveBeenCalledWith('/login');
+});
+```
+
+### 如何测试需要等待的组件
+
+有的时候我们会遇到在几秒之后自动展示/隐藏的组件（如 `Alert` ），尝试各种`waitFor`系列的函数和`expect`的组合都不能正确地等待到组件被渲染。使用最朴素的方法，等待几秒钟之后再去检查元素是否 `visiable`/ `not visiable`，sleep实现如下
+
+```tsx
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+```
+
+具体实现可以参考[what-is-the-javascript-version-of-sleep](https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep)
+
 ### 如何在不影响组件原有代码的情况下进行单元测试
 对于组件的测试，我们的测试代码应该尽量追求不修改原组件代码，如此则使得单元测试存在一些困难，因为这些组件代码中不可能去专门使用为单元测试定义的`client`，而是要使用全局定义的普通`Service`。解决方案有两种，第一是将数据定义在`mockData`文件中，并将`globalE2EMock`配置项设为`true`。另一种方案如下：
 
