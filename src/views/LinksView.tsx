@@ -1,13 +1,12 @@
 import React from "react";
-import {Button, CircularProgress, createStyles, Divider, List, makeStyles, Theme} from "@material-ui/core";
+import {Button, CircularProgress, createStyles, Divider, List, makeStyles, Theme, Paper} from "@material-ui/core";
 import {ListItem} from "../components/ListItem"
 import {useEntities} from "../hooks/useEntities";
 import {ILink, ILinkInput} from "../types/ILink";
 import {linkService} from "../services/LinkService";
 import {MutateMethods} from "../hooks/useEntity";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
+const useStyles = makeStyles((theme: Theme) =>createStyles({
     root: {
       width: "100%",
       maxWidth: 580,
@@ -32,13 +31,21 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     iconButton: {
       marginTop: "50%"
-    }
-  })
-);
+    },
+    text:{
+      position: 'absolute', left: '50%', top: '50%',
+      transform: 'translate(-50%, -50%)',
+      color:"grey",
+      width:"20%",
+      height:"30%",
+      display:"flex",
+      justifyContent:"center"
+    },
+}));
 
 export function LinksView() {
   const classes = useStyles();
-  const {entities, loading, issueMutate} = useEntities<ILink, ILinkInput>(linkService);
+  const {entities, loading, error, issueMutate} = useEntities<ILink, ILinkInput>(linkService);
   
   function renderItems() {
     let items: JSX.Element[] = [];
@@ -67,7 +74,11 @@ export function LinksView() {
     <>
       {loading && <CircularProgress className={classes.loadingIndicator}/>}
       {!loading && <List dense className={classes.root}>
-        {renderItems()}
+        {renderItems() ||
+            <Paper className={classes.text}>
+            <h3 style={{margin:"auto"}}>您的短链接列表为空</h3>
+            </Paper>
+        }
       </List>}
     </>
   );

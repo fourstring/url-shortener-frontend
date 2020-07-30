@@ -6,6 +6,12 @@ import {
 } from "@material-ui/core";
 import {render} from "@testing-library/react";
 
+
+/*
+* 检测 ListItem
+* ListItem 是否正确显示data内容
+* @author ydx
+*/
 describe("ListItem test", ()=>{
     it('should render components correctly', async()=>{
         const {getByText} = render(
