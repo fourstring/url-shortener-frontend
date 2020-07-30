@@ -11,4 +11,4 @@ export const testBaseService = new BaseService<string>(testClient);
 export const testLinkService = new LinkService(testClient);
 export const testAuthService = new AuthService(testClient);
 
-export {testAdapter}
+export {testAdapter, testClient}

@@ -7,9 +7,11 @@ import {createMemoryHistory} from "history";
 import {renderHook} from "@testing-library/react-hooks";
 import {IUser} from "../types/IUser";
 import {Router as BasicRouter} from "react-router";
-import {Adapter} from "../mocks/e2eClient";
+import {authService} from "../services/AuthService";
 import {getByDeepText} from "../utils/getByDeepText";
+import {testClient, testAdapter} from "../mocks/testClient";
 
+authService.client = testClient;
 /*
 * sleep ms
 * 在 javascript 中模拟睡眠函数
@@ -70,10 +72,10 @@ describe('RegisterView test', () => {
   * @author wfn
   */
   it('should show login after successfully register', async () => {
-    Adapter.onPost('http://localhost:8080/auth/register').reply(config => {
+    testAdapter.onPost('/auth/register').reply(config => {
       return [200]
     });
-    Adapter.onPost('http://localhost:8080/auth/exist').reply(config => {
+    testAdapter.onPost('/auth/exist').reply(config => {
       return [200]
     });
     const {mockHistoryReplace, getByPlaceholderText, getByText} = setup();
@@ -99,10 +101,10 @@ describe('RegisterView test', () => {
   * @author wfn
   */
   it('should show login after successfully register', async () => {
-    Adapter.onPost('http://localhost:8080/auth/register').reply(config => {
+    testAdapter.onPost('/auth/register').reply(config => {
       return [200]
     });
-    Adapter.onPost('http://localhost:8080/auth/exist').reply(config => {
+    testAdapter.onPost('/auth/exist').reply(config => {
       return [200]
     });
     const {getByPlaceholderText, getByText} = setup();
@@ -127,10 +129,10 @@ describe('RegisterView test', () => {
   * @author wfn
   */
   it('should alert error if fail to register', async () => {
-    Adapter.onPost('http://localhost:8080/auth/register').reply(config => {
+    testAdapter.onPost('/auth/register').reply(config => {
       return [400]
     });
-    Adapter.onPost('http://localhost:8080/auth/exist').reply(config => {
+    testAdapter.onPost('/auth/exist').reply(config => {
       return [200]
     });
     const {getByText, getByPlaceholderText} = setup();
@@ -184,7 +186,7 @@ describe('RegisterView handle error test', () => {
   * @author wfn
   */
   it('should error if exist', async () => {
-    Adapter.onPost('http://localhost:8080/auth/exist').reply(config => {
+    testAdapter.onPost('/auth/exist').reply(config => {
       return [403]
     });
     const {getByText, getByPlaceholderText} = setup();
@@ -203,6 +205,9 @@ describe('RegisterView handle error test', () => {
   * @author wfn
   */
   it('should warn if email if wrong', async () => {
+    testAdapter.onPost('/auth/exist').reply(config => {
+      return [200]
+    });
     const {getByText, getByPlaceholderText} = setup();
     fireEvent.change(getByPlaceholderText("请输入邮箱"), {
       target: {value: 'email'}

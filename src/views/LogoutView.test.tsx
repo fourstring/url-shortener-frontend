@@ -6,6 +6,10 @@ import {render, waitFor} from "@testing-library/react";
 import {UserContext} from "../contexts/UserContext";
 import {Router as BasicRouter} from "react-router";
 import {LogoutView} from "./LogoutView";
+import {authService} from "../services/AuthService";
+import {testAdapter, testClient } from "../mocks/testClient";
+
+authService.client = testClient;
 
 /*
 * 检测 LogoutView
@@ -15,6 +19,9 @@ import {LogoutView} from "./LogoutView";
 it('LogoutView test', async () => {
   const {result} = renderHook(() => useState<IUser | null>(null))
   const [user, setUser] = result.current
+  testAdapter.onGet('/auth/logout').reply(config => {
+    return [200]
+  });
   const history = createMemoryHistory({
     initialEntries: ['/logout']
   })

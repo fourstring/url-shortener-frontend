@@ -8,12 +8,19 @@ import {UserContext} from "../contexts/UserContext";
 import {IUser} from "../types/IUser";
 import {createMemoryHistory} from "history";
 import {getByDeepText} from "../utils/getByDeepText";
+import {authService} from "../services/AuthService";
+import {testUser} from "../mocks/testData";
+import {testAdapter, testClient } from "../mocks/testClient";
 
+authService.client = testClient;
 /*
 * 前期准备工作
 * 因为检测页面跳转不太方便，为history.replace添加一个 mock
 */
 const setup = () => {
+  testAdapter.onPost('/auth/login').reply(config => {
+    return [200, {user: testUser, accessToken: "justTestToken", csrfToken: "justTestToken"}]
+  })
   const {result} = renderHook(() => useState<IUser | null>(null))
   const [user, setUser] = result.current
   const mockHistoryReplace = jest.fn();
