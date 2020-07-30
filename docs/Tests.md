@@ -150,3 +150,124 @@ beforeEach(() => {
 不使用`clearAllMocks`是为了可能的其他mock模块的考虑。
 
 另外WebStorm等的代码提示是基于正常浏览器/Node环境而非Jest测试环境，因此会提示不存在`mockClear`方法，忽略该提示或使用`// @ts-suppress`屏蔽即可。
+
+### 如何点击组件进行测试
+
+在测试 `点击` 效果的时候，我们使用 `fireEvent.click(screen.getByText(“Hello world”))` 来寻找内容为 `“Hello world”`的组件，但一个可能会遇到的问题是：
+
+```
+Unable to find an element with the text: Hello world.
+This could be because the text is broken up by multiple elements.
+In this case, you can provide a function for your text
+matcher to make your matcher more flexible.
+```
+
+这是因为当text被包裹在深层的组件里时（如下图，“我的短连接”被包裹在 `<span></span>` 中），会出现寻找不到该组件的情况。而使用其他关键字来寻找是一件很麻烦的事。
+
+<img src="https://i.loli.net/2020/07/22/jN9wvb6fuexGmzg.png" alt="image-20200722171349265" style="zoom:150%;" />
+
+实际上，我们的 `screen.getByText` 不仅支持传递参数，也支持传递一个函数来作为`matcher`对组件进行删选，所以我们实现一个自定义的 `getByDeepText` 函数来寻找深层内容符合我们预期的组件
+
+```javascript
+function getByDeepText(text: string) {
+    return screen.getByText((content: string, node: Element) => {
+        const hasText = (node: Element) => node.textContent === text;
+        const nodeHasText = hasText(node);
+        const childrenDontHaveText = Array.from(node.children).every(
+            (child: Element) => !hasText(child)
+        );
+        return nodeHasText && childrenDontHaveText;
+    });
+}
+```
+
+使用时直接调用 `fireEvent.click(getByDeepText('your text'))` 来执行组件的点击。
+
+
+### 如何进行路由相关的交互测试
+
+`react-router-dom`提供的各种`Router`的区别在于其底层绑定的`history`对象的类型不同，如`BrowserRouter`底层绑定的`history`对象是浏览器提供的API，用于测试的`MemoryRouter`底层绑定的对象是`MemoryHistory`。
+
+该库提供的这些Router组件均只会去监听它们所绑定的history对象的变化，而在测试中，我们常常希望通过测试代码操控当前路由，这就要求我们能访问这些Router底层的history对象，但对于上述封装了创建`history`对象过程的组件，我们只有在组件中使用`useHistory`hook才能获取到它们所绑定的`history`对象，这是不太方便的。
+
+在测试中，我们可以使用该库提供的`Router`基组件，它接受一个名为`history`的prop，值为要绑定的history对象。我们可以使用`history`库的`createMemoryHistory`函数创建一个`MemoryHistory`对象并绑定到`Router`组件上。为了和我们实现的声明式路由器组件区分，我们在导入库提供的`Router`组件时把它as为`BasicRouter`。
+通过`history`对象也可以访问当前路由，`history.location.pathname`。
+
+具体可以参考`Router.test.tsx`中的测试代码，例如：
+```typescript jsx
+const history = createMemoryHistory({
+  initialEntries: ['/']
+});
+const {getByText} = render(<BasicRouter history={history}>
+  <Router routes={routes}/>
+</BasicRouter>);
+expect(getByText(/1/i)).toBeInTheDocument();
+act(() => {
+  history.push('/t1');
+});
+expect(getByText(/2/i)).toBeInTheDocument();
+act(() => {
+  history.push('/t2');
+});
+expect(getByText(/3/i)).toBeInTheDocument();
+```
+
+### 如何利用wait和act去等待组件渲染
+
+`waitForDomToBeChange` 函数已经被删除，如果想要简单的等待再次渲染，可以直接使用 `await waitFor(() => {})`来代替
+
+act、wait怎么组合可以参考 [react-testing-library-and-the-not-wrapped-in-act-errors](https://medium.com/@davidwcai/react-testing-library-and-the-not-wrapped-in-act-errors-491a5629193b)
+
+### 如何在无法利用组件判断跳转完成时检测路由跳转
+
+有时会出现无法判断跳转后页面渲染完成，从而不能确认何时检测路由的值的情况，我们可以通过 mock 一个 `history.replace()`函数，然后通过检查该函数如何被调用来实现对路由跳转的检测
+
+通过参考这个实现 [mock useHistory](https://github.com/mrdulin/jest-codelab/blob/master/src/stackoverflow/58524183/NotFound.test.jsx)(虽然不能直接用但思路可以参考), 改写我们测试中可用的 mock 方法：
+
+```tsx
+const mockHistoryReplace = jest.fn();
+const history = createMemoryHistory({
+  initialEntries: ['/'],
+});
+history.replace = mockHistoryReplace;
+const {getByPlaceholderText, getByText} = render(
+    <BasicRouter history={history}>
+      </>
+    </BasicRouter>
+)
+```
+
+接着检查:
+
+```tsx
+await waitFor(() => {
+   expect(mockHistoryReplace).toHaveBeenCalledWith('/login');
+});
+```
+
+### 如何测试需要等待的组件
+
+有的时候我们会遇到在几秒之后自动展示/隐藏的组件（如 `Alert` ），尝试各种`waitFor`系列的函数和`expect`的组合都不能正确地等待到组件被渲染。使用最朴素的方法，等待几秒钟之后再去检查元素是否 `visiable`/ `not visiable`，sleep实现如下
+
+```tsx
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+```
+
+具体实现可以参考[what-is-the-javascript-version-of-sleep](https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep)
+
+### 如何在不影响组件原有代码的情况下进行单元测试
+对于组件的测试，我们的测试代码应该尽量追求不修改原组件代码，如此则使得单元测试存在一些困难，因为这些组件代码中不可能去专门使用为单元测试定义的`client`，而是要使用全局定义的普通`Service`。解决方案有两种，第一是将数据定义在`mockData`文件中，并将`globalE2EMock`配置项设为`true`。另一种方案如下：
+
+```typescript
+import {authService} from "./AuthService";
+
+authService.client=testClient;
+```
+
+这一技巧利用了JavaScript中变量的引用本质。对于所有导入`authService`的模块，均相当于在自身作用域中创建一个引用，指向`AuthService.ts`中定义的全局对象。那么在这样的情况下，直接通过引用修改该对象的成员变量，将会让代码中其余使用该成员的代码也收到连带更新。但反之如果：
+```typescript
+authService=testAuthService;
+```
+则这仅仅只是将导入它的模块作用域内的一个引用指向他处，并不影响其他模块中使用该对象的代码。

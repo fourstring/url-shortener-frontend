@@ -1,9 +1,8 @@
 import {client as normalClient} from "../utils/network";
+import config from "../config";
 import {AxiosInstance, AxiosResponse} from "axios";
 import {EntityService, IRequestFilterOptions} from "./ServiceInterfaces";
 import {IPagedData} from "../types/IPage";
-import config from "../config";
-import {mockClient} from "../mocks/mockData";
 
 const urljoin = require('url-join');
 
@@ -11,10 +10,15 @@ export class BaseService<T, InputT = T> implements EntityService<T, InputT> {
   endpoint: string = '';
   client: AxiosInstance;
 
-  constructor(client ?: AxiosInstance){
-    if(client) this.client = client;
-    else if(config.globalE2EMock) this.client = config.globalE2EMockClient;
-    else this.client = normalClient;
+  constructor(client ?: AxiosInstance) {
+    console.log(config)
+    if(client){
+      this.client = client;
+    }else if(config.globalE2EMock){
+      this.client = config.globalE2EMockClient;
+    }else{
+      this.client = normalClient;
+    }
   }
 
   async delete(id: number): Promise<boolean> {
@@ -55,4 +59,3 @@ export class BaseService<T, InputT = T> implements EntityService<T, InputT> {
   }
 
 }
-
