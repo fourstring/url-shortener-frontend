@@ -22,8 +22,7 @@ function App() {
           email: decode.email,
         })
         setMonitorId(window.setInterval(jwtMonitor, config.jwtMonitorRate, () => {
-          // @ts-ignore
-          UserContext.setUser(null);
+          setUser(null);
           window.clearInterval(monitorId);
           setMonitorId(0);
         }));
