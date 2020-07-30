@@ -212,8 +212,6 @@ act(() => {
 expect(getByText(/3/i)).toBeInTheDocument();
 ```
 
-
-
 ### 如何利用wait和act去等待组件渲染
 
 `waitForDomToBeChange` 函数已经被删除，如果想要简单的等待再次渲染，可以直接使用 `await waitFor(() => {})`来代替
@@ -258,3 +256,18 @@ function sleep(ms: number) {
 ```
 
 具体实现可以参考[what-is-the-javascript-version-of-sleep](https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep)
+
+### 如何在不影响组件原有代码的情况下进行单元测试
+对于组件的测试，我们的测试代码应该尽量追求不修改原组件代码，如此则使得单元测试存在一些困难，因为这些组件代码中不可能去专门使用为单元测试定义的`client`，而是要使用全局定义的普通`Service`。解决方案有两种，第一是将数据定义在`mockData`文件中，并将`globalE2EMock`配置项设为`true`。另一种方案如下：
+
+```typescript
+import {authService} from "./AuthService";
+
+authService.client=testClient;
+```
+
+这一技巧利用了JavaScript中变量的引用本质。对于所有导入`authService`的模块，均相当于在自身作用域中创建一个引用，指向`AuthService.ts`中定义的全局对象。那么在这样的情况下，直接通过引用修改该对象的成员变量，将会让代码中其余使用该成员的代码也收到连带更新。但反之如果：
+```typescript
+authService=testAuthService;
+```
+则这仅仅只是将导入它的模块作用域内的一个引用指向他处，并不影响其他模块中使用该对象的代码。

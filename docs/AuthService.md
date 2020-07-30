@@ -62,6 +62,8 @@ POST请求`/auth/login`接口，数据为用户名和密码。若用户名密码
 ### logout();
 GET请求`/auth/logout`接口，随后不论接口返回值如何，将LocalStorage中的`accessToken`、`csrfToken`清除。
 
+此外还应检查`monitorId`（参见Token文档），并使用`clearInterval`清除定时执行。
+
 ### ping(): Promise\<IUser|null>;
 GET请求`/auth/ping`接口，该接口使用JWT认证，用于返回当前登陆用户的`User`数据。若接口成功返回，则将所返回的`User`数据作为返回值，若接口返回403,本方法应当捕获AxiosError，并返回null。
 
