@@ -1,4 +1,5 @@
 import {client} from './network'
+import config from "../config";
 /*
 * 测试 interceptor 设置正确
 * 检查 client 在 localStorage 值为空和不为空时成功设置
@@ -10,7 +11,7 @@ describe('Client set correctly test', () => {
   * @author wfn
   */
   it('should set baseURL and withCredentials correctly', () => {
-    expect(client.defaults.baseURL).toBe('http://localhost:8080');
+    expect(client.defaults.baseURL).toBe(config.baseURL);
     expect(client.defaults.withCredentials).toBe(true);
   });
 

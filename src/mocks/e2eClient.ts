@@ -7,7 +7,7 @@ const baseURL: string = 'http://localhost:8080';
 export const testLink: ILink = {
   id: 1,
   user: testUser,
-  linkKey: "abcdefg.test.com",
+  linkKey: "abcdefg",
   href: "test.com",
   createAt: "string",
   updateAt: "string"

@@ -114,7 +114,8 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts",
       "!src/mocks/*",
-      "!src/utils/validation_schemas/*"
+      "!src/utils/validation_schemas/*",
+      "!src/config.ts"
     ],
     "setupFiles": [
       "jest-localstorage-mock",
