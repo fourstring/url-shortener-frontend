@@ -69,7 +69,7 @@ export function NavBar() {
     });
     return map;
   }, [displayList]);
-
+  console.log(location.pathname);
   let value = pathToIndexMap.get(location.pathname);
 
   return (value === undefined ? null :

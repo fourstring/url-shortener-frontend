@@ -1,15 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {
-  Button,
-  Card,
-  Container,
-  CssBaseline,
-  Grid,
-  InputAdornment,
-  makeStyles,
-  TextField,
-  Typography
-} from '@material-ui/core';
+import {Button, Card, Container, Grid, InputAdornment, makeStyles, TextField, Typography} from '@material-ui/core';
 import {Link} from '@material-ui/icons';
 import {useHistory} from "react-router-dom";
 import {linkService} from "../services/LinkService";
@@ -51,7 +41,6 @@ export function ShortenView() {
     if (user) {
       let resp = await linkService.post({user: user?.id, href: value});
       setShort('短链接 : ' + linkService.buildShortenLink(resp.linkKey));
-      console.log(user);
     } else {
       setShort('请先登录！');
     }
@@ -68,8 +57,7 @@ export function ShortenView() {
 
   return (
     <>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline/>
+      <Container component="main" maxWidth="sm">
         <div className={classes.paper}>
           <Typography component="h1" variant="h5">
             缩短链接
@@ -122,8 +110,19 @@ export function ShortenView() {
                 </Button>
               </Grid>
               <Grid item xs={12}>
-                <Card id='shortText'>
-                  {short}
+                <Card
+                  id='shortText'
+                  style={{
+                    padding: 10
+                  }}
+                >
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <Typography variant={"body1"}>
+                        {short}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </Card>
               </Grid>
             </Grid>
