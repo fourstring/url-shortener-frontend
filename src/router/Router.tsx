@@ -43,7 +43,7 @@ function RecursiveRouter(props: React.PropsWithoutRef<{
 
 export function Router(props: React.PropsWithoutRef<IRouterProps>) {
   const contextRoutes = useContext<IRoute[]>(RoutesContext);
-  const routes = contextRoutes.length === 0 ? props.routes : contextRoutes;
+  const routes = contextRoutes.length === 0 ? props.routes as IRoute[] : contextRoutes;
   return (
     <RoutesContext.Provider value={routes}>
       <RecursiveRouter routes={routes}/>

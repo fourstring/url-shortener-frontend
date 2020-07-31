@@ -17,5 +17,5 @@ export interface IRoute {
 }
 
 export interface IRouterProps {
-  routes: IRoute[];
+  routes?: IRoute[];
 }

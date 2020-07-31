@@ -40,7 +40,7 @@ function App() {
         <RoutesContext.Provider value={routes}>
           <CssBaseline/>
           <NavBar/>
-          <Router routes={routes}/>
+          <Router/>
         </RoutesContext.Provider>
       </BrowserRouter>
     </UserContext.Provider>
