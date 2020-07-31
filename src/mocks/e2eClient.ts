@@ -2,6 +2,7 @@ import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import {testPagedData, testUser} from "./testData";
 import {ILink} from "../types/ILink";
+
 const jwt = require('jsonwebtoken');
 
 const baseURL: string = 'http://localhost:8080';
@@ -39,19 +40,6 @@ testAdapter.onPost('/links', {user: 1, href: "test.com"}).reply(() => {
 
 testAdapter.onGet('/links').reply(config => {
   return [200, testPagedData]
-});
-
-/* mock token */
-const token = jwt.sign({
-  exp: Math.floor(Date.now() / 1000 + 1),
-  user_id: 1,
-  username: 'admin',
-  email: 'admin@example.com'
-}, 'secret');
-localStorage.setItem('access_token',token);
-
-testAdapter.onGet(baseURL + '/auth/refresh' ).reply(config => {
-  return [200, {"accessToken": token}]
 });
 
 export {globalE2EMockClient}
