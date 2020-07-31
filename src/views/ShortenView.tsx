@@ -48,9 +48,9 @@ export function ShortenView() {
 
   function handleShowAll() {
     if (user) {
-      history.push("/links");
+      history.replace("/links");
     } else {
-      history.replace("/login");
+      setShort('请先登录！');
     }
 
   }

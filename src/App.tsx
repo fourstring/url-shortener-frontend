@@ -6,6 +6,8 @@ import {IUser} from "./types/IUser";
 import {BrowserRouter} from 'react-router-dom';
 import config from "./config";
 import {CssBaseline} from "@material-ui/core";
+import {NavBar} from "./components/NavBar";
+import {RoutesContext} from "./contexts/RoutesContext";
 
 let {jwtMonitor, monitorId, setMonitorId} = require('./utils/jwtMonitor')
 let jwt = require('jsonwebtoken');
@@ -35,8 +37,11 @@ function App() {
   return (
     <UserContext.Provider value={{user, setUser}}>
       <BrowserRouter>
-        <CssBaseline/>
-        <Router routes={routes}/>
+        <RoutesContext.Provider value={routes}>
+          <CssBaseline/>
+          <NavBar/>
+          <Router routes={routes}/>
+        </RoutesContext.Provider>
       </BrowserRouter>
     </UserContext.Provider>
   )

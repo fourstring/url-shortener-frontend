@@ -1,8 +1,7 @@
-import React from "react";
+import React, {useContext} from "react";
 import {IRoute, IRouterProps} from "../types/IRouter";
 import {Route, Switch,} from "react-router-dom";
 import {RoutesContext} from "../contexts/RoutesContext";
-import {NavBar} from "../components/NavBar";
 
 function RecursiveRouter(props: React.PropsWithoutRef<{
   routes: IRoute[],
@@ -43,10 +42,11 @@ function RecursiveRouter(props: React.PropsWithoutRef<{
 }
 
 export function Router(props: React.PropsWithoutRef<IRouterProps>) {
+  const contextRoutes = useContext<IRoute[]>(RoutesContext);
+  const routes = contextRoutes.length === 0 ? props.routes : contextRoutes;
   return (
-    <RoutesContext.Provider value={props.routes}>
-      <NavBar/>
-      <RecursiveRouter routes={props.routes}/>
+    <RoutesContext.Provider value={routes}>
+      <RecursiveRouter routes={routes}/>
     </RoutesContext.Provider>
   )
 }
