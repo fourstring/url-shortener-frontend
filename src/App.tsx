@@ -5,6 +5,8 @@ import {UserContext} from "./contexts/UserContext";
 import {IUser} from "./types/IUser";
 import {BrowserRouter} from 'react-router-dom';
 import config from "./config";
+import {CssBaseline} from "@material-ui/core";
+
 let {jwtMonitor, monitorId, setMonitorId} = require('./utils/jwtMonitor')
 let jwt = require('jsonwebtoken');
 
@@ -14,7 +16,7 @@ function App() {
     (async function f() {
       const token = await jwtMonitor();
       console.log(token)
-      if(token){
+      if (token) {
         let decode = jwt.decode(token);
         setUser({
           id: decode.user_id,
@@ -33,6 +35,7 @@ function App() {
   return (
     <UserContext.Provider value={{user, setUser}}>
       <BrowserRouter>
+        <CssBaseline/>
         <Router routes={routes}/>
       </BrowserRouter>
     </UserContext.Provider>
