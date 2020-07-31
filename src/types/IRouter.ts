@@ -1,6 +1,7 @@
 import React from "react";
 
 export interface IRouteMetadata {
+  display?: boolean;
   displayText?: string;
   displayIcon?: React.ReactNode;
   anonymousOnly?: boolean;

@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom'
-import {testAdapter, testAuthService, testUser} from "../mocks/testData";
+import {testAdapter, testAuthService} from "../mocks/testClient";
+import {testUser} from "../mocks/testData";
+import {monitorId, setMonitorId, jwtMonitor} from '../utils/jwtMonitor';
 
 beforeEach(() => {
   // @ts-ignore
@@ -69,7 +71,8 @@ describe('AuthService logout test', () => {
   * logout 成功返回 200, logout 函数应当返回 true, 同时检查localStorage被移除两次
   * @author wfn
   */
-  it("Test normal flow of AuthService logout", async () => {
+  it("Test normal flow of AuthService logout without monitor", async () => {
+    setMonitorId(0);
     testAdapter.onGet('/auth/logout').reply(config => {
       return [200]
     });
@@ -77,6 +80,20 @@ describe('AuthService logout test', () => {
     expect(localStorage.removeItem).toHaveBeenCalledTimes(2);
     expect(localStorage.getItem('access_token')).toBeNull();
     expect(localStorage.getItem('csrf_token')).toBeNull();
+  });
+
+  /*
+  * 检测 AuthService logout 设置 monitorId
+  * logout成功后，应当根据 Monitor的值使用clearInterval取消定时执行，并设置 Monitor
+  * @author wfn
+  */
+  it("Test normal flow of AuthService logout with monitor", async () => {
+    setMonitorId(window.setInterval(jwtMonitor, 1000));
+    testAdapter.onGet('/auth/logout').reply(config => {
+      return [200]
+    });
+    await testAuthService.logout();
+    expect(monitorId).toBe(0);
   });
 
   /*

@@ -1,19 +1,10 @@
 import '@testing-library/jest-dom'
-import React, {useContext, useState} from "react";
-import {waitFor, fireEvent, render, screen} from '@testing-library/react';
-import {act} from 'react-dom/test-utils';
+import React, {useState} from "react";
+import {act, fireEvent, render, screen} from '@testing-library/react';
 import {ShortenView} from "./ShortenView";
-import {
-  testAdapter,
-  testLink,
-  testLinkInput,
-  testLinkService,
-  testPagedData,
-  testRequestFilterOptions, testUser
-} from "../mocks/testData";
 import {createMemoryHistory} from "history";
 import {Router as BasicRouter} from "react-router";
-import {UserContext, UserContextType} from "../contexts/UserContext";
+import {UserContext} from "../contexts/UserContext";
 
 function getByDeepText(text: string) {
   return screen.getByText((content: string, node: Element) => {
@@ -30,7 +21,7 @@ function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-let setuser : any;
+let setuser: any;
 const mockHistoryReplace = jest.fn();
 const history = createMemoryHistory({
   initialEntries: ['/'],
@@ -40,7 +31,7 @@ history.replace = mockHistoryReplace;
 export function SetUp() {
   const [user, setUser] = useState();
   setuser = setUser;
-  return(
+  return (
     <UserContext.Provider value={{user, setUser}}>
       <BasicRouter history={history}>
         <ShortenView/>
@@ -64,11 +55,11 @@ describe('Test shorter button', () => {
   * @author lzl
   */
   it("Test when not login", async () => {
-    act(()=>{
+    act(() => {
       render(<SetUp/>);
       setuser(null);
     })
-    act(()=>{
+    act(() => {
       fireEvent.click(getByDeepText('生成短链接'));
     })
     expect(getByDeepText('请先登录！')).toBeInTheDocument();
@@ -80,14 +71,14 @@ describe('Test shorter button', () => {
   * @author lzl
   */
   it("Test when login", async () => {
-    act(()=>{
+    act(() => {
       const {getByLabelText} = render(<SetUp/>);
       fireEvent.change(getByLabelText("原链接"), {
-        target: { value: 'test.com' }
+        target: {value: 'test.com'}
       })
       setuser({id: 1, username: 'string', email: "user@example.com"});
-      });
-    act(()=>{
+    });
+    act(() => {
       fireEvent.click(getByDeepText('生成短链接'));
     })
     await sleep(3000);
@@ -110,11 +101,11 @@ describe('Test showAll button', () => {
   * @author lzl
   */
   it("Test when not login", async () => {
-    act(()=>{
+    act(() => {
       render(<SetUp/>);
       setuser(null);
     })
-    act(()=>{
+    act(() => {
       fireEvent.click(getByDeepText('查看所有短链接'));
     })
     expect(getByDeepText('请先登录！')).toBeInTheDocument();
@@ -126,11 +117,11 @@ describe('Test showAll button', () => {
   * @author lzl
   */
   it("Test when login", async () => {
-    act(()=>{
+    act(() => {
       render(<SetUp/>);
       setuser({id: 1, username: 'string', email: "user@example.com"});
     });
-    act(()=>{
+    act(() => {
       fireEvent.click(getByDeepText('查看所有短链接'));
     });
     await sleep(3000);
