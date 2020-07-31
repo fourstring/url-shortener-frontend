@@ -19,7 +19,7 @@ describe('NavBer e2e test', () => {
   it('should render tabs correctly', () => {
     cy.visit('/')
     cy.contains('短链接生成器')
-    cy.contains('首页')
+    cy.contains('缩短链接')
     cy.contains('我的短链接')
   })
 
@@ -31,7 +31,7 @@ describe('NavBer e2e test', () => {
  */
   it('should highlight the correct tab', () => {
     cy.visit('/')
-    cy.get('.Mui-selected').contains('首页')
+    cy.get('.Mui-selected').contains('缩短链接')
     cy.visit('/links')
     cy.get('.Mui-selected').contains('我的短链接')
   })
@@ -46,10 +46,10 @@ describe('NavBer e2e test', () => {
     cy.visit('/links')
     cy.get('.Mui-selected')
       .contains('我的短链接')
-    cy.contains('首页').click()
+    cy.contains('缩短链接').click()
     cy.url()                   // 8.
-      .should('eq', baseUrl+'/');
-    cy.get('.Mui-selected').contains('首页')
+      .should('eq', baseUrl+'/shorten');
+    cy.get('.Mui-selected').contains('缩短链接')
   })
 
   /*
@@ -57,7 +57,16 @@ describe('NavBer e2e test', () => {
   * 检测点击头像后正确显示相应的用户菜单
   * @author wfn
   */
-  it('should open menu if click avatar',() => {
+  it('should open menu if click avatar after login',() => {
+    cy.visit('/login')
+    cy.get('[placeholder="请输入用户名"]')
+      .type('username')
+    cy.get('[placeholder="请输入密码"]')
+      .type('12345678')
+    cy.get('button').contains('登陆')
+      .click();
+    cy.url()                   // 8.
+      .should('eq', baseUrl+'/shorten');
     cy.get('.MuiAvatar-root').click();
     cy.get('.MuiList-root')
       .should("be.visible");

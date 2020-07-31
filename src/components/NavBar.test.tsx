@@ -1,11 +1,10 @@
 import '@testing-library/jest-dom/extend-expect'
 import React, {useState} from 'react'
 import {act, fireEvent, render, waitFor} from '@testing-library/react'
-import {renderHook} from '@testing-library/react-hooks'
 import {NavBar} from './NavBar'
 import {Router as BasicRouter} from "react-router-dom";
 import {Router} from '../router/Router'
-import {createMemoryHistory} from 'history'
+import {createMemoryHistory, MemoryHistory} from 'history'
 import {IRoute} from "../types/IRouter";
 import {UserContext} from "../contexts/UserContext";
 import {IUser} from "../types/IUser";
@@ -47,7 +46,24 @@ const routes: IRoute[] = [
     }
   }
 ]
-
+const TestComponent = ({
+                         userInit,
+                         history,
+                         routes
+                       }: React.PropsWithoutRef<{
+  userInit: IUser | null,
+  history: MemoryHistory,
+  routes: IRoute[]
+}>) => {
+  const [user, setUser] = useState<IUser | null>(userInit);
+  return (
+    <UserContext.Provider value={{user, setUser}}>
+      <BasicRouter history={history}>
+        <Router routes={routes}/>
+      </BasicRouter>
+    </UserContext.Provider>
+  )
+}
 /*
 * 检测 NavBar
 * NavBar是否正确渲染
@@ -60,17 +76,11 @@ describe('NavBar test', () => {
   * @author wfn
   */
   it('should render components according to props correctly', async () => {
-    const {result} = renderHook(() => useState<IUser | null>(testUser))
-    const [user, setUser] = result.current;
     const history = createMemoryHistory({
       initialEntries: ['/']
     });
     const {getByText} = render(
-      <UserContext.Provider value={{user, setUser}}>
-        <BasicRouter history={history}>
-          <Router routes={routes}/>
-        </BasicRouter>
-      </UserContext.Provider>
+      <TestComponent userInit={testUser} history={history} routes={routes}/>
     );
     expect(getByText("Test0")).toBeInTheDocument();
     expect(getByText("Test3")).toBeInTheDocument();
@@ -87,17 +97,11 @@ describe('NavBar test', () => {
   * @author wfn
   */
   it('should render components according to props correctly without user', async () => {
-    const {result} = renderHook(() => useState<IUser | null>(null))
-    const [user, setUser] = result.current;
     const history = createMemoryHistory({
       initialEntries: ['/']
     });
     const {getByText} = render(
-      <UserContext.Provider value={{user, setUser}}>
-        <BasicRouter history={history}>
-          <Router routes={routes}/>
-        </BasicRouter>
-      </UserContext.Provider>
+      <TestComponent userInit={null} history={history} routes={routes}/>
     );
     expect(getByText("Test0")).toBeInTheDocument();
     expect(getByText("Test1")).toBeInTheDocument();
@@ -118,17 +122,11 @@ describe('NavBar test', () => {
   * @author wfn
   */
   it('should not render with wrong url', async () => {
-    const {result} = renderHook(() => useState<IUser | null>(testUser))
-    const [user, setUser] = result.current;
     const history = createMemoryHistory({
       initialEntries: ['/wrongUrl']
     });
     const {getByText} = render(
-      <UserContext.Provider value={{user, setUser}}>
-        <BasicRouter history={history}>
-          <Router routes={routes}/>
-        </BasicRouter>
-      </UserContext.Provider>
+      <TestComponent userInit={testUser} history={history} routes={routes}/>
     );
     await expect(waitFor(() =>
       getByText("我的短链接"))).rejects.toThrow();
