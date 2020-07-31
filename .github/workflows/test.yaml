@@ -1,0 +1,21 @@
+name: Tests
+on:
+  push:
+    branches: [ wfn, lzl, ydx ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Run unit tests
+        run: npm run-script test --coverage
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: ./coverage/
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}

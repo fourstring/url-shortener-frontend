@@ -16,6 +16,9 @@ client.interceptors.request.use(config => {
   if (accessToken) {
     config.headers['Authorization'] = `Bearer ${accessToken}`;
   }
+  if (config.url && !config.url.endsWith('/')) {
+    config.url += '/';
+  }
   return config;
 });
 

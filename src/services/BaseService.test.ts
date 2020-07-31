@@ -1,4 +1,6 @@
-import {testBaseService, testAdapter}  from "../mocks/testClient";
+import {testAdapter, testBaseService, testLinkService} from "../mocks/testClient";
+import {IRequestFilterOptions} from "./ServiceInterfaces";
+import {ILink} from "../types/ILink";
 
 /*
 * 检测 BaseService 异常
@@ -39,6 +41,21 @@ describe('BaseService normal flow test', () => {
       return [200, 'test']
     });
   })
+
+  it('should build params correctly', function () {
+    let filter: IRequestFilterOptions<ILink> = {
+      page: 1,
+      size: 10,
+      fields: ["href", "updateAt"],
+      test: "abc"
+    }
+    expect(testLinkService.buildParams(filter)).toEqual({
+      page: 1,
+      size: 10,
+      fields: "href,updateAt",
+      test: "abc"
+    });
+  });
 
   /*
   * 检测 BaseService 的 patch

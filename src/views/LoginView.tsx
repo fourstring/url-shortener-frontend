@@ -4,19 +4,12 @@ import {IAuthRedirectState} from "../types/IAuth";
 import {Field, Form, Formik} from "formik";
 import {UserContext, UserContextType} from "../contexts/UserContext";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid,
-  LinearProgress,
-  Typography
-} from "@material-ui/core";
+import {Button, Card, CardActions, CardContent, CardHeader, Grid, LinearProgress, Typography} from "@material-ui/core";
 import {TextField} from "formik-material-ui";
 import {LoginSchema} from "../utils/validation_schemas/LoginSchema";
 import {authService} from "../services/AuthService";
+import config from "../config";
+import {jwtMonitor, monitorId, setMonitorId} from "../utils/jwtMonitor";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,7 +58,13 @@ export function LoginView() {
             password: ""
           }}
           onSubmit={async (values) => {
-            const user = await authService.login(values)
+            const user = await authService.login(values);
+            // setup interval execute of jwtMonitor
+            setMonitorId(window.setInterval(jwtMonitor, config.jwtMonitorRate, () => {
+              setUser(null);
+              window.clearInterval(monitorId);
+              setMonitorId(0);
+            }));
             setUser(user);
             history.replace(from.pathname as string);
           }}

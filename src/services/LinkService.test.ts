@@ -1,11 +1,8 @@
 import '@testing-library/jest-dom'
-import {
-  testLink,
-  testLinkInput,
-  testPagedData,
-  testRequestFilterOptions
-} from "../mocks/testData";
-import {testLinkService, testAdapter} from "../mocks/testClient"
+import {testLink, testLinkInput, testPagedData, testRequestFilterOptions} from "../mocks/testData";
+import {testAdapter, testLinkService} from "../mocks/testClient"
+import urljoin from "url-join";
+import config from "../config";
 
 /*
 * 检测 LinkService get 返回值
@@ -166,3 +163,7 @@ describe('LinkService post test', () => {
     await expect(testLinkService.post(testLinkInput)).rejects.toThrow();
   })
 })
+
+it('should build shorten link correctly', function () {
+  expect(testLinkService.buildShortenLink('abcdef')).toEqual(urljoin(config.shortenLinkBaseURL, 'abcdef'));
+});

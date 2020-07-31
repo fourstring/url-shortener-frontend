@@ -5,6 +5,7 @@ import {ShortenView} from "./ShortenView";
 import {createMemoryHistory} from "history";
 import {Router as BasicRouter} from "react-router";
 import {UserContext} from "../contexts/UserContext";
+import {testLinkService} from "../mocks/testClient";
 
 function getByDeepText(text: string) {
   return screen.getByText((content: string, node: Element) => {
@@ -82,9 +83,7 @@ describe('Test shorter button', () => {
       fireEvent.click(getByDeepText('生成短链接'));
     })
     await sleep(3000);
-    expect(getByDeepText('短链接 : abcdefg.test.com')).toBeInTheDocument();
-
-
+    expect(getByDeepText(`短链接 : ${testLinkService.buildShortenLink('abcdefg')}`)).toBeInTheDocument();
   });
 });
 
