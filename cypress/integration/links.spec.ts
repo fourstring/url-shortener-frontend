@@ -5,7 +5,6 @@
 */
 // @ts-ignore
 const cy = Cypress.cy;
-
 describe("list e2e test", ()=>{
   it('should render list', ()=>{
     cy.visit('/login')

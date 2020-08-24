@@ -25,9 +25,9 @@ function App() {
           username: decode.username,
           email: decode.email,
         })
-        setMonitorId(window.setInterval(jwtMonitor, config.jwtMonitorRate, () => {
+        setMonitorId(setInterval(jwtMonitor, config.jwtMonitorRate, () => {
           setUser(null);
-          window.clearInterval(monitorId);
+          clearInterval(monitorId);
           setMonitorId(0);
         }));
       }

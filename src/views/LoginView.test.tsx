@@ -2,7 +2,6 @@ import '@testing-library/jest-dom'
 import React, {useState} from 'react'
 import {Router as BasicRouter} from "react-router";
 import {fireEvent, render, waitFor} from "@testing-library/react";
-import {renderHook} from "@testing-library/react-hooks";
 import {LoginView} from "./LoginView";
 import {UserContext} from "../contexts/UserContext";
 import {IUser} from "../types/IUser";
@@ -10,7 +9,7 @@ import {createMemoryHistory} from "history";
 import {getByDeepText} from "../utils/getByDeepText";
 import {authService} from "../services/AuthService";
 import {testUser} from "../mocks/testData";
-import {testAdapter, testClient } from "../mocks/testClient";
+import {testAdapter, testClient} from "../mocks/testClient";
 
 authService.client = testClient;
 /*
@@ -21,22 +20,27 @@ const setup = () => {
   testAdapter.onPost('/auth/login').reply(config => {
     return [200, {user: testUser, accessToken: "justTestToken", csrfToken: "justTestToken"}]
   })
-  const {result} = renderHook(() => useState<IUser | null>(null))
-  const [user, setUser] = result.current
   const mockHistoryReplace = jest.fn();
   const history = createMemoryHistory({
     initialEntries: ['/'],
   });
   history.replace = mockHistoryReplace;
-  const {getByPlaceholderText, getByText} = render(<UserContext.Provider value={{user, setUser}}>
-    <BasicRouter history={history}>
-      <LoginView/>
-    </BasicRouter>
-  </UserContext.Provider>)
+  const TestComponent = () => {
+    const [user, setUser] = useState<IUser | null>(null);
+    return (
+      <UserContext.Provider value={{user, setUser}}>
+        <BasicRouter history={history}>
+          <LoginView/>
+        </BasicRouter>
+      </UserContext.Provider>
+    )
+  }
+  const {getByPlaceholderText, getByText} = render(<TestComponent/>)
 
   return {mockHistoryReplace, getByPlaceholderText, getByText}
 }
-
+beforeEach(() => jest.useFakeTimers());
+afterEach(() => jest.clearAllTimers());
 /*
 * 检测 LoginView
 * LoginView 是否正确响应用户的不同操作

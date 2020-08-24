@@ -9,7 +9,6 @@
 const cy = Cypress.cy;
 // @ts-ignore
 const baseUrl = Cypress.config().baseUrl;
-
 describe('NavBer e2e test', () => {
   /*
   * NavBer 正确渲染测试
