@@ -34,13 +34,6 @@ let testDataTableFilterProps : IDataTableFilterProps = {
 */
 describe('test useMultiFilter', () => {
   it('should correctly render and trigger', async () => {
-    // const {getByRole} = render(<Component/>);
-    // expect(getByDeepText(`testPlaceholder`)).toBeInTheDocument();
-    // fireEvent.mouseDown(getByRole('button'));
-    // await sleep(3000);
-    // const listBox = within(getByRole('listbox'));
-    // fireEvent.click(listBox.getByText(/testLabel1/i));
-
     let outerSelectedOption;
     const Component = function () {
       const [selectedOption, filter] = useMultiFilter(testDataTableFilterProps);
