@@ -16,7 +16,7 @@ describe("Test useCheckboxes", () => {
 
   it('should render components correctly ', () => {
     const {result} = renderHook(() => useCheckboxes<ILink>(link));
-    expect(result.current.selected).toBeNull;
+    expect(result.current.selected.length).toBe(0);
 
     act(() => {
       result.current.select(1);
@@ -28,7 +28,11 @@ describe("Test useCheckboxes", () => {
       result.current.clear();
     })
 
-    expect(result.current.selected).toBeNull;
+    expect(result.current.selected.length).toBe(0);
+
+    act(() => {
+      result.current.select(100);//选择不存在的索引，无反应
+    })
   }),
 
   /**
@@ -38,7 +42,7 @@ describe("Test useCheckboxes", () => {
    */
     it('should render components correctly', () => {
       const {result} = renderHook(() => useCheckboxes<ILink>(linkDb));
-      expect(result.current.selected).toBeNull;
+      expect(result.current.selected.length).toBe(0);
 
       interface testObject2 {
         name: string;
