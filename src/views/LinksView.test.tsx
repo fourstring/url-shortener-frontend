@@ -25,9 +25,8 @@ describe("Test LinksView", () => {
         <LinksView/>
       );
       await waitFor(() => {
+        expect(getByText("删除")).toBeInTheDocument();
       });
-
-      expect(getByText("删除")).toBeInTheDocument();
 
       act(() => {
         fireEvent.click(getByText('删除'));
@@ -45,9 +44,8 @@ describe("Test LinksView", () => {
         <LinksView/>
       );
       await waitFor(() => {
+        expect(getByText("您的短链接列表为空")).toBeInTheDocument();
       });
-
-      expect(getByText("您的短链接列表为空")).toBeInTheDocument();
     })
   }
 )

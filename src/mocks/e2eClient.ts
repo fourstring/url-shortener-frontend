@@ -1,7 +1,9 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import {testUser} from "./testData";
+import {testPagedData, testUser} from "./testData";
 import {ILink} from "../types/ILink";
+
+const jwt = require('jsonwebtoken');
 
 const baseURL: string = 'http://localhost:8080';
 export const testLink: ILink = {
@@ -34,6 +36,10 @@ testAdapter.onPost(baseURL + '/auth/login').reply(config => {
 
 testAdapter.onPost('/links', {user: 1, href: "test.com"}).reply(() => {
   return [200, testLink];
+});
+
+testAdapter.onGet('/links').reply(config => {
+  return [200, testPagedData]
 });
 
 export {globalE2EMockClient}
