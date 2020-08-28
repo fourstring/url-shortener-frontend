@@ -6,7 +6,7 @@ import {LoginView} from "./LoginView";
 import {UserContext} from "../contexts/UserContext";
 import {IUser} from "../types/IUser";
 import {createMemoryHistory} from "history";
-import {getByDeepText} from "../utils/getByDeepText";
+import {getByDeepText} from "../utils/tests";
 import {authService} from "../services/AuthService";
 import {testUser} from "../mocks/testData";
 import {testAdapter, testClient} from "../mocks/testClient";
