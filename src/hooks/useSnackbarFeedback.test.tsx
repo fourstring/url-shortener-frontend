@@ -2,15 +2,7 @@ import React from "react";
 import {Button} from '@material-ui/core';
 import {act, fireEvent, render, waitFor} from "@testing-library/react";
 import {useSnackbarFeedback} from './useSnackbarFeedback'
-import {getByDeepText} from "../utils/getByDeepText";
-
-/*
-* sleep ms
-* 在 javascript 中模拟睡眠函数
-*/
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+import {getByDeepText, sleep} from "../utils/tests";
 
 const Component = function () {
   const {success, successBar, fail, failBar} = useSnackbarFeedback();

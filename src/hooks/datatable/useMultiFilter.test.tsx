@@ -1,22 +1,8 @@
 import React from "react";
-import {fireEvent, render, screen, within} from "@testing-library/react";
-import {IDataTableFilterProps, IDataTableFilterOption} from "../../types/IDataTable";
+import {act, fireEvent, render, screen, within} from "@testing-library/react";
+import {IDataTableFilterProps, IDataTableFilterOption, IDataTableFilterOutput} from "../../types/IDataTable";
 import {useMultiFilter} from "./useMultiFilter";
-
-function getByDeepText(text: string) {
-  return screen.getByText((content: string, node: Element) => {
-    const hasText = (node: Element) => node.textContent === text;
-    const nodeHasText = hasText(node);
-    const childrenDontHaveText = Array.from(node.children).every(
-      (child: Element) => !hasText(child)
-    );
-    return nodeHasText && childrenDontHaveText;
-  });
-}
-
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+import {sleep, getByDeepText} from "../../utils/tests"
 
 let testDateTableFilterOption1 : IDataTableFilterOption = {
   label : 'testLabel1',
@@ -28,6 +14,11 @@ let testDateTableFilterOption2 : IDataTableFilterOption = {
   value : 'testValue2'
 };
 
+let testDataTableFilterOutput : IDataTableFilterOutput = {
+  name : 'testName',
+  value : ['testValue1']
+};
+
 let dataTableFilterProps = async () => { return [testDateTableFilterOption1, testDateTableFilterOption2] };
 
 let testDataTableFilterProps : IDataTableFilterProps = {
@@ -36,14 +27,6 @@ let testDataTableFilterProps : IDataTableFilterProps = {
   optionFetcher : dataTableFilterProps
 };
 
-const Component = function () {
-  const [selectedOption, filter] = useMultiFilter(testDataTableFilterProps);
-  console.log(testDataTableFilterProps.optionFetcher);
-  return (<>
-    {filter}
-  </>)
-}
-
 /*
 * 检测 useMultiFilter
 * 检查 useMultiFilter 是否能够成功渲染并且选项框可选触发onchange
@@ -51,11 +34,30 @@ const Component = function () {
 */
 describe('test useMultiFilter', () => {
   it('should correctly render and trigger', async () => {
+    let outerSelectedOption;
+    const Component = function () {
+      const [selectedOption, filter] = useMultiFilter(testDataTableFilterProps);
+      outerSelectedOption = selectedOption;
+      console.log(testDataTableFilterProps.optionFetcher);
+      return (<>
+        {filter}
+      </>)
+    }
+
     const {getByRole} = render(<Component/>);
     expect(getByDeepText(`testPlaceholder`)).toBeInTheDocument();
-    fireEvent.mouseDown(getByRole('button'));
+
+    act(()=>{
+      fireEvent.mouseDown(getByRole('button'));
+    });
     await sleep(3000);
     const listBox = within(getByRole('listbox'));
-    fireEvent.click(listBox.getByText(/testLabel1/i));
+
+    act(()=>{
+      fireEvent.click(listBox.getByText(/testLabel1/i));
+    });
+
+    expect(outerSelectedOption).toStrictEqual(testDataTableFilterOutput);
+
   })
 });

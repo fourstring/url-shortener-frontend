@@ -1,6 +1,6 @@
 import React from "react";
 import {render} from "@testing-library/react";
-import {getByDeepText} from "./getByDeepText";
+import {getByDeepText, sleep} from "./tests";
 
 describe('getByDeepText test', () => {
   it('should get', async () => {
@@ -9,6 +9,7 @@ describe('getByDeepText test', () => {
         Hello <span>world</span>
       </div>
     );
+    await sleep(3000);
     expect(getByDeepText("Hello world")).toBeInTheDocument();
   });
 });

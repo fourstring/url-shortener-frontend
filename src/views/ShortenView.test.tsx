@@ -6,21 +6,7 @@ import {createMemoryHistory} from "history";
 import {Router as BasicRouter} from "react-router";
 import {UserContext} from "../contexts/UserContext";
 import {testLinkService} from "../mocks/testClient";
-
-function getByDeepText(text: string) {
-  return screen.getByText((content: string, node: Element) => {
-    const hasText = (node: Element) => node.textContent === text;
-    const nodeHasText = hasText(node);
-    const childrenDontHaveText = Array.from(node.children).every(
-      (child: Element) => !hasText(child)
-    );
-    return nodeHasText && childrenDontHaveText;
-  });
-}
-
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+import {sleep, getByDeepText} from "../utils/tests"
 
 let setuser: any;
 const mockHistoryReplace = jest.fn();

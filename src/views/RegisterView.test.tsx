@@ -8,17 +8,10 @@ import {renderHook} from "@testing-library/react-hooks";
 import {IUser} from "../types/IUser";
 import {Router as BasicRouter} from "react-router";
 import {authService} from "../services/AuthService";
-import {getByDeepText} from "../utils/getByDeepText";
+import {getByDeepText, sleep} from "../utils/tests";
 import {testClient, testAdapter} from "../mocks/testClient";
 
 authService.client = testClient;
-/*
-* sleep ms
-* 在 javascript 中模拟睡眠函数
-*/
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 /*
 * 前期准备工作
