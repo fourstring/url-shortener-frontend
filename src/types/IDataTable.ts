@@ -22,8 +22,8 @@ export interface IDataTableFilterOutput {
 export type useFilterResult = [IDataTableFilterOutput | null, JSX.Element];
 
 export interface _IDataTableProps<RowData extends object> extends MaterialTableProps<RowData> {
-  filterOptions: IRequestFilterOptions<any>;
-  dataSource: EntityService<RowData>;
+  filterOptions: IRequestFilterOptions<RowData>;
+  dataSource: EntityService<RowData, object>; // the second may be Input kind
 }
 
 export type IDataTableProps<RowData extends object> = Omit<_IDataTableProps<RowData>, 'data' | 'icons'>;

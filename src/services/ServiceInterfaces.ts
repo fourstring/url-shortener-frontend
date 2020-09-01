@@ -3,9 +3,9 @@ import {IPagedData} from '../types/IPage'
 import MockAdapter from "axios-mock-adapter";
 
 export interface IRequestFilterOptions<T> {
-  page: number;
-  size: number;
-  fields: (keyof T)[];
+  page?: number;
+  size?: number;
+  fields?: (keyof T)[];
 
   [name: string]: any;
 }
