@@ -1,16 +1,17 @@
-import React from "react";
+import React, {useContext} from "react";
 import {Button, CircularProgress, createStyles, Divider, List, makeStyles, Paper, Theme} from "@material-ui/core";
-import {ListItem} from "../components/ListItem"
+import {CardItem} from "../components/CardItem"
 import {useEntities} from "../hooks/useEntities";
 import {ILink, ILinkInput} from "../types/ILink";
 import {linkService} from "../services/LinkService";
 import {MutateMethods} from "../hooks/useEntity";
+import {UserContext, UserContextType} from "../contexts/UserContext";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
   root: {
     width: "100%",
     maxWidth: 580,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: 'black',//theme.palette.background.paper,
     margin: 'auto'
   },
   loadingIndicator: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   },
   listItem: {
     display: "flex",
+    position:"relative",
     margin: "auto"
   },
   iconButton: {
@@ -46,16 +48,18 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 export function LinksView() {
   const classes = useStyles();
   const {entities, loading, error, issueMutate} = useEntities<ILink, ILinkInput>(linkService);
+ const {user} = useContext(UserContext) as UserContextType;
 
   function renderItems() {
     let items: JSX.Element[] = [];
+    
     for (const [key, value] of entities.entries()) {
       items.push(
-        <div key={key}>
+        <div key={key} style={{margin:'auto', width:'50%', height:500, marginTop:20}}>
           <div className={classes.listItem}>
-            <ListItem item={value}/>
-            <Button style={{height: "50%", margin: "auto"}} id="delete"
-                    color="secondary" onClick={() => handleDelete(value.id)}
+            <CardItem item={value}/>
+            <Button style={{position:"absolute", right:50, top:40}} id="delete"
+                    color="secondary" variant="contained"  onClick={() => handleDelete(value.id)}
             >删除</Button>
           </div>
           <Divider variant="inset" component="li"/>
@@ -75,14 +79,12 @@ export function LinksView() {
   return (
     <>
       {loading && <CircularProgress className={classes.loadingIndicator}/>}
-      {!loading && <List dense className={classes.root}>
-        {
+      {!loading && 
           items.length === 0 ?
             <Paper className={classes.text}>
               <h3 style={{margin: "auto"}}>您的短链接列表为空</h3>
             </Paper> : items
-        }
-      </List>}
+      }
     </>
   );
 }

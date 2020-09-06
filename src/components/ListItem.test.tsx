@@ -1,5 +1,5 @@
 import React from "react";
-import {ListItem} from "./ListItem"
+import {ListItem} from "./CardItem"
 import {link} from "../mocks/mockDb";
 import {List} from "@material-ui/core";
 import {render} from "@testing-library/react";
