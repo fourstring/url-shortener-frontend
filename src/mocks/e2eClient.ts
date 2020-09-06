@@ -1,6 +1,6 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import {testPagedData, testUser} from "./testData";
+import {testAdmin, testPagedData, testUser} from "./testData";
 import {ILink} from "../types/ILink";
 
 const baseURL: string = 'http://localhost:8080';
@@ -29,6 +29,10 @@ testAdapter.onGet(baseURL + '/auth/logout').reply(config => {
 });
 
 testAdapter.onPost(baseURL + '/auth/login').reply(config => {
+  const data = JSON.parse(config.data);
+  if (data.username === 'admin') {
+    return [200, {user: testAdmin, accessToken: "justTestToken", csrfToken: "justTestToken"}]
+  }
   return [200, {user: testUser, accessToken: "justTestToken", csrfToken: "justTestToken"}]
 });
 

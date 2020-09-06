@@ -20,7 +20,6 @@ function App() {
   useEffect(() => {
     (async function f() {
       const token = await jwtMonitor();
-      console.log(token)
       if (token) {
         let decode = jwt.decode(token);
         setUser({
@@ -42,11 +41,11 @@ function App() {
     <UserContext.Provider value={{user, setUser}}>
       <BrowserRouter>
         <RoutesContext.Provider value={routes}>
+          <CssBaseline/>
+          {feedback.successBar}
+          {feedback.failBar}
+          <NavBar/>
           <FeedbackContext.Provider value={feedback}>
-            <CssBaseline/>
-            {feedback.successBar}
-            {feedback.failBar}
-            <NavBar/>
             <Router/>
           </FeedbackContext.Provider>
         </RoutesContext.Provider>
