@@ -5,7 +5,8 @@ import {IUser} from "../types/IUser";
 
 /* user service */
 /* const data used to mock */
-export const testUser: IUser = {id: 1, username: 'string', email: "user@example.com"};
+export const testUser: IUser = {id: 1, username: 'string', email: "user@example.com", admin: false};
+export const testAdmin: IUser = {id: 2, username: 'admin', email: 'admin@test.com', admin: true};
 
 /* link service */
 /* const data used to mock */

@@ -10,6 +10,7 @@ import {LoginSchema} from "../utils/validation_schemas/LoginSchema";
 import {authService} from "../services/AuthService";
 import config from "../config";
 import {jwtMonitor, monitorId, setMonitorId} from "../utils/jwtMonitor";
+import {FeedbackContext} from "../contexts/FeedbackContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,6 +41,7 @@ export function LoginView() {
   const history = useHistory();
   const location = useLocation<IAuthRedirectState | null>();
   const {from} = location.state || {from: {pathname: "/"}};
+  const feedback = useContext(FeedbackContext);
 
   return (
     <>
@@ -58,15 +60,20 @@ export function LoginView() {
             password: ""
           }}
           onSubmit={async (values) => {
-            const user = await authService.login(values);
-            // setup interval execute of jwtMonitor
-            setMonitorId(window.setInterval(jwtMonitor, config.jwtMonitorRate, () => {
-              setUser(null);
-              window.clearInterval(monitorId);
-              setMonitorId(0);
-            }));
-            setUser(user);
-            history.replace(from.pathname as string);
+            try {
+              const user = await authService.login(values);
+              // setup interval execute of jwtMonitor
+              setMonitorId(window.setInterval(jwtMonitor, config.jwtMonitorRate, () => {
+                setUser(null);
+                window.clearInterval(monitorId);
+                setMonitorId(0);
+              }));
+              setUser(user);
+              history.replace(from.pathname as string);
+            } catch (e) {
+              feedback.fail("登陆失败，请检查您的用户名和密码");
+              return;
+            }
           }}
           validationSchema={LoginSchema}
         >
@@ -117,7 +124,9 @@ export function LoginView() {
                     </Grid>
                     <Grid item>
                       <Button
-                        onClick={()=>{history.replace('/register')}}
+                        onClick={() => {
+                          history.replace('/register')
+                        }}
                         variant={"contained"}
                       >
                         注册

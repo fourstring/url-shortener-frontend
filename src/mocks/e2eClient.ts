@@ -3,8 +3,6 @@ import MockAdapter from "axios-mock-adapter";
 import {testPagedData, testUser} from "./testData";
 import {ILink} from "../types/ILink";
 
-const jwt = require('jsonwebtoken');
-
 const baseURL: string = 'http://localhost:8080';
 export const testLink: ILink = {
   id: 1,

@@ -6,8 +6,33 @@ import {LoginView} from "./views/LoginView";
 import {LogoutView} from "./views/LogoutView";
 import {RegisterView} from "./views/RegisterView";
 import {Redirect} from "react-router-dom";
+import {AnalysisView} from "./views/admin/AnalysisView";
+import {StatisticView} from "./views/admin/StatisticView";
 
 export const routes: IRoute[] = [
+  {
+    path: '/admin',
+    subRoutes: [
+      {
+        path: '/analysis',
+        component: <AnalysisView/>,
+        metadata: {
+          displayText: "数据分析",
+          display: true,
+          adminOnly: true
+        }
+      },
+      {
+        path: '/statistic',
+        component: <StatisticView/>,
+        metadata: {
+          displayText: "访问统计",
+          display: true,
+          adminOnly: true
+        }
+      }
+    ]
+  },
   {
     path: '/shorten',
     component: <ShortenView/>,
