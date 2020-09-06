@@ -36,6 +36,14 @@ testAdapter.onPost(baseURL + '/auth/login').reply(config => {
   return [200, {user: testUser, accessToken: "justTestToken", csrfToken: "justTestToken"}]
 });
 
+testAdapter.onPost(baseURL + '/auth/change_password', {original: '88888888', new: "11111111"}).reply(config => {
+  return [200]
+});
+
+testAdapter.onPost(baseURL + '/auth/change_password', {original: '123123123', new: "11111111"}).reply(config => {
+  return [400]
+});
+
 testAdapter.onPost('/links', {user: 1, href: "test.com"}).reply(() => {
   return [200, testLink];
 });

@@ -4,9 +4,8 @@ import {Link} from '@material-ui/icons';
 import {useHistory} from "react-router-dom";
 import {linkService} from "../services/LinkService";
 import {UserContext, UserContextType} from "../contexts/UserContext";
-
 import '@testing-library/jest-dom';
-
+import {FeedbackContext} from "../contexts/FeedbackContext";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(15),
@@ -33,7 +32,65 @@ export function ShortenView() {
   const [value, setValue] = useState('');
   const [short, setShort] = useState('');
   const {user, setUser} = useContext(UserContext) as UserContextType;
+  const feedback = useContext(FeedbackContext);
   let history = useHistory();
+
+  const handleCopy = (e: ClipboardEvent) => {
+    // clipboardData 可能是 null
+    e.clipboardData && e.clipboardData.setData('text/plain', short.slice(6));
+    e.preventDefault();
+    // removeEventListener 要传入第二个参数
+    document.removeEventListener('copy', handleCopy);
+  };
+
+  const Component = function () {
+    if(short === '') return (<> </>);
+    if(!user) {
+      return (<>
+        <Card
+          id='shortText'
+          style={{
+            padding: 10
+          }}
+        >
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant={"body1"} display='initial'>
+                {short}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Card>
+      </>);
+    }
+    return (<>
+      <Card
+        id='shortText'
+        style={{
+          padding: 10
+        }}
+      >
+        <Grid container>
+          <Grid item xs={10}>
+            <Typography variant={"body1"} display='initial'>
+              {short}
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+              onClick={() => {
+                document.addEventListener('copy', handleCopy);
+                document.execCommand('copy');
+                feedback.success("复制成功！")
+              }}
+              className={`verificationCode`}>
+              点击复制
+            </Button>
+          </Grid>
+        </Grid>
+      </Card>
+    </>)
+  };
 
   async function handleShorten() {
     // await setUser(null);
@@ -110,20 +167,7 @@ export function ShortenView() {
                 </Button>
               </Grid>
               <Grid item xs={12}>
-                <Card
-                  id='shortText'
-                  style={{
-                    padding: 10
-                  }}
-                >
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <Typography variant={"body1"}>
-                        {short}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Card>
+                {<Component />}
               </Grid>
             </Grid>
           </form>

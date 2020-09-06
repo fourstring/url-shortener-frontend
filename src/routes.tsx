@@ -8,6 +8,7 @@ import {RegisterView} from "./views/RegisterView";
 import {Redirect} from "react-router-dom";
 import {AnalysisView} from "./views/admin/AnalysisView";
 import {StatisticView} from "./views/admin/StatisticView";
+import {ChangePassWordView} from "./views/ChangePasswordView";
 
 export const routes: IRoute[] = [
   {
@@ -77,6 +78,14 @@ export const routes: IRoute[] = [
       displayText: "注册",
       display: true,
       anonymousOnly: true
+    }
+  },
+  {
+    path: '/changePassword',
+    component: <ChangePassWordView/>,
+    metadata: {
+      displayText: "修改密码",
+      display: false
     }
   },
   {
