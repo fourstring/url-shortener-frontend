@@ -19,6 +19,11 @@ export interface IRegisterCredential {
   email: string;
 }
 
+export interface IChangePasswordData {
+  original: string,
+  new: string
+}
+
 export interface IAuthRedirectState {
   from: Partial<H.Location>;
 }

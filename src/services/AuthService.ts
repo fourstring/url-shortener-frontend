@@ -1,5 +1,5 @@
 import {AxiosInstance} from "axios";
-import {IAuthCredential, IAuthRespData, IRegisterCredential} from "../types/IAuth";
+import {IAuthCredential, IAuthRespData, IChangePasswordData, IRegisterCredential} from "../types/IAuth";
 import {IUser} from "../types/IUser";
 import {client as normalClient} from "../utils/network";
 import config from "../config";
@@ -51,6 +51,18 @@ export class AuthService {
   async register(profile: IRegisterCredential): Promise<boolean> {
     try {
       let result = await this.client.post('/auth/register', profile);
+      return result.status === 200;
+    } catch (e) {
+      if (e.isAxiosError && e.response.status === 400) {
+        return false;
+      }
+      throw e;
+    }
+  }
+
+  async changePassword(profile: IChangePasswordData): Promise<boolean> {
+    try {
+      let result = await this.client.post('/auth/change_password', profile);
       return result.status === 200;
     } catch (e) {
       if (e.isAxiosError && e.response.status === 400) {
