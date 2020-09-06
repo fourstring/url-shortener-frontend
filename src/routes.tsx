@@ -6,6 +6,7 @@ import {LoginView} from "./views/LoginView";
 import {LogoutView} from "./views/LogoutView";
 import {RegisterView} from "./views/RegisterView";
 import {Redirect} from "react-router-dom";
+import {LinksAdminView} from "./views/LinksAdminView";
 
 export const routes: IRoute[] = [
   {
@@ -28,6 +29,16 @@ export const routes: IRoute[] = [
         }
       }
     ]
+  },
+  {
+    path: '/admin',
+    component: <LinksAdminView/>,
+    metadata: {
+      displayText: "短链接管理",
+      display: true,
+      authenticatedOnly: true,
+      adminOnly: true,
+    }
   },
   {
     path: '/login',
