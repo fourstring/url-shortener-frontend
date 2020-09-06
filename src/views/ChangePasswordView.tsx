@@ -107,7 +107,6 @@ export function ChangePassWordView() {
                     <Field disabled
                            name={'username'}
                            label={'用户名 : ' + user?.username}
-                           placeholder={"请输入邮箱"}
                            variant={'outlined'}
                            component={TextField}
                            className={classes.field}
@@ -145,6 +144,9 @@ export function ChangePassWordView() {
                       </Button>
                       <Button variant={'contained'} color={'secondary'} onClick={() => resetForm()}>
                         重置
+                      </Button>
+                      <Button variant={'contained'} onClick={() => {history.replace('/shorten')}}>
+                        返回
                       </Button>
                     </Grid>
                   </Grid>

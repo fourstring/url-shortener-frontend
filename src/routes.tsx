@@ -85,7 +85,7 @@ export const routes: IRoute[] = [
     component: <ChangePassWordView/>,
     metadata: {
       displayText: "修改密码",
-      display: true
+      display: false
     }
   },
   {
