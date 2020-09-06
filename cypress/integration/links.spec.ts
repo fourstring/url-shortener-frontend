@@ -16,7 +16,7 @@ describe("list e2e test", ()=>{
       .click();
     cy.visit('/links')
     cy.contains('string');
-    cy.contains('//api.fourstring.dev/s/string');
+    cy.contains('//api.fourstring.dev');
     cy.contains('删除');
   })
 })

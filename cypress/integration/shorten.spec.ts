@@ -64,7 +64,7 @@ describe('Test shorten function when login', function () {
     cy.contains(/^登陆$/).click();
     cy.get('#hrefField').type('test.com');
     cy.get('#shortenButton').click();
-    cy.contains('https://api.fourstring.dev/s/abcdefg')
+    cy.contains('https://api.fourstring.dev/')
   })
 
   /*
