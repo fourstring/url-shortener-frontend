@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useHistory} from 'react-router-dom';
 import {
   Button,
@@ -21,6 +21,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import {linkService} from "../services/LinkService";
 import {UserContext, UserContextType} from "../contexts/UserContext";
 import {ChangePasswordSchema} from "../utils/validation_schemas/ChangePasswordSchema";
+import {monitorId, setMonitorId} from "../utils/jwtMonitor";
+import {FeedbackContext} from "../contexts/FeedbackContext";
 
 const useStyle = makeStyles((theme: Theme) => createStyles(
   {
@@ -43,31 +45,28 @@ const useStyle = makeStyles((theme: Theme) => createStyles(
 export function ChangePassWordView() {
   const classes = useStyle();
   const history = useHistory();
+  const feedback = useContext(FeedbackContext);
   const [success, setSuccess] = useState(false);
   const [failed, setFailed] = useState(false);
   const {user, setUser} = useContext(UserContext) as UserContextType;
-
   if(!user) history.replace("/login");
 
-  function handleToLogin() {
-    history.replace('/login');
-  }
+  useEffect(() => {
+    if (failed) {
+      feedback.fail("用户未登录或提供错误的原密码！")
+    }
+
+  }, [failed]);
+
+  useEffect(() => {
+    if (success) {
+      feedback.success("修改成功！")
+      history.replace("/login");
+    }
+  }, [success]);
 
   return (
     <>
-      <Snackbar open={success} autoHideDuration={3000} onClose={() => setSuccess(false)}>
-        <Alert severity={"success"} action={
-          <Button variant={"contained"} color={"primary"} onClick={handleToLogin}>
-            登陆
-          </Button>}>
-          修改成功！
-        </Alert>
-      </Snackbar>
-      <Snackbar open={failed} autoHideDuration={3000} onClose={() => setFailed(false)}>
-        <Alert severity={"error"}>
-          用户未登录或提供错误的原密码！
-        </Alert>
-      </Snackbar>
       <Card className={classes.registerArea}>
         <CardHeader
           title={<Typography variant={'h5'} align={"center"}>
@@ -84,6 +83,12 @@ export function ChangePassWordView() {
               const {repeatNew, ...profile} = values;
               const result = await authService.changePassword(profile);
               if (result) {
+                localStorage.removeItem('access_token'); // Clear accessToken stored.
+                localStorage.removeItem('csrf_token'); // Clear csrfToken stored.
+                if (monitorId) {
+                  window.clearInterval(monitorId);
+                  setMonitorId(0);
+                }
                 setSuccess(true);
               } else {
                 setFailed(true);

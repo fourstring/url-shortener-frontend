@@ -5,6 +5,7 @@ import {useHistory} from "react-router-dom";
 import {linkService} from "../services/LinkService";
 import {UserContext, UserContextType} from "../contexts/UserContext";
 import '@testing-library/jest-dom';
+import {FeedbackContext} from "../contexts/FeedbackContext";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(15),
@@ -31,6 +32,7 @@ export function ShortenView() {
   const [value, setValue] = useState('');
   const [short, setShort] = useState('');
   const {user, setUser} = useContext(UserContext) as UserContextType;
+  const feedback = useContext(FeedbackContext);
   let history = useHistory();
 
   const handleCopy = (e: ClipboardEvent) => {
@@ -75,14 +77,15 @@ export function ShortenView() {
             </Typography>
           </Grid>
           <Grid item xs={2}>
-            <button
+            <Button
               onClick={() => {
                 document.addEventListener('copy', handleCopy);
                 document.execCommand('copy');
+                feedback.success("复制成功！")
               }}
               className={`verificationCode`}>
               点击复制
-            </button>
+            </Button>
           </Grid>
         </Grid>
       </Card>
