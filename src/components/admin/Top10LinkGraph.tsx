@@ -7,7 +7,7 @@ export function Top10LinkGraph() {
       margin: 20
     }}>
       <CardHeader
-        title={<Typography variant={"h4"}>
+        title={<Typography variant={"h5"}>
           最热短链接Top10
         </Typography>}
       />

@@ -16,12 +16,12 @@ export class AdminStatService {
     }
   }
 
-  async getGeneral(): Promise<IGeneralStat> {
+  getGeneral = async (): Promise<IGeneralStat> => {
     let response = await this.client.get<IGeneralStat>('/admin/analysis/general');
     return response.data
   }
 
-  async getTop10(): Promise<ITopLink[]> {
+  getTop10 = async (): Promise<ITopLink[]> => {
     let response = await this.client.get<ITopLink[]>('/admin/analysis/top10');
     return response.data
   }

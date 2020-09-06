@@ -6,6 +6,7 @@ import {IGeneralStat, ITopLink} from "../../types/IAdminStat";
 import {CircularProgress, Grid, useMediaQuery, useTheme} from "@material-ui/core";
 import {GeneralStatPanel} from "../../components/admin/GeneralStatPanel";
 import {FeedbackContext} from "../../contexts/FeedbackContext";
+import {Top10LinkTable} from "../../components/admin/Top10LinkTable";
 
 export function AnalysisView() {
   const {data: generalStat, loading: generalStatLoading, error: generalStatError} = useRequest<IGeneralStat>(adminStatService.getGeneral);
@@ -35,6 +36,7 @@ export function AnalysisView() {
             <Grid item md={8} xs={12}>
               <GeneralStatPanel data={generalStat as IGeneralStat}/>
               <Top10LinkGraph/>
+              <Top10LinkTable links={top10 as ITopLink[]}/>
             </Grid>
             {isWideScreen && <Grid item md={2}/>}
           </Grid>
