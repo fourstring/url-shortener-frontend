@@ -1,7 +1,7 @@
 import {IUser} from "../types/IUser";
 import {ILink} from "../types/ILink";
 
-function fillDb<T extends any>(db: Map<number, T>, key: string = "id") {
+function fillDb<T extends Record<string, any>>(db: Map<number, T>, key: string = "id") {
   return (value: T) => db.set(value[key] as number, value);
 }
 
