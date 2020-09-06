@@ -2,7 +2,7 @@ import {IEntity} from "./IEntity";
 import {IUser} from "./IUser";
 
 export interface ILinkInput {
-  user: number;
+  user?: number;
   href: string;
   linkKey?: string;
 }
