@@ -19,7 +19,8 @@ let link: ILink[] = [
     linkKey: "NNr96e",
     href: "https://nimo.sjtu.edu.cn/",
     createAt: "2020-07-20",
-    updateAt: "2020-07-20"
+    updateAt: "2020-07-20",
+    disabled: false,
   },
   {
     id: 2,
@@ -27,7 +28,8 @@ let link: ILink[] = [
     linkKey: "NNr96e",
     href: "https://github.com/fourstring/url-shortener-frontend",
     createAt: "2020-07-20",
-    updateAt: "2020-07-20"
+    updateAt: "2020-07-20",
+    disabled: true,
   },
   {
     id: 3,
@@ -35,7 +37,8 @@ let link: ILink[] = [
     linkKey: "A7PKCQ",
     href: "https://nimo.sjtu.edu.cn/",
     createAt: "2020-07-21",
-    updateAt: "2020-07-21"
+    updateAt: "2020-07-21",
+    disabled: false,
   },
   {
     id: 4,
@@ -43,7 +46,8 @@ let link: ILink[] = [
     linkKey: "NNr96e",
     href: "https://github.com/fourstring/url-shortener-frontend",
     createAt: "2020-07-20",
-    updateAt: "2020-07-20"
+    updateAt: "2020-07-20",
+    disabled: false,
   },
   {
     id: 5,
@@ -51,7 +55,8 @@ let link: ILink[] = [
     linkKey: "A7PKCQ",
     href: "https://nimo.sjtu.edu.cn/",
     createAt: "2020-07-20",
-    updateAt: "2020-07-20"
+    updateAt: "2020-07-20",
+    disabled: true,
   },
   {
     id: 6,
@@ -59,7 +64,8 @@ let link: ILink[] = [
     linkKey: "NNr96e",
     href: "https://github.com/fourstring/url-shortener-frontend",
     createAt: "2020-07-20",
-    updateAt: "2020-07-20"
+    updateAt: "2020-07-20",
+    disabled: true,
   },
   {
     id: 7,
@@ -67,7 +73,8 @@ let link: ILink[] = [
     linkKey: "A7PKCQ",
     href: "https://nimo.sjtu.edu.cn/",
     createAt: "2020-07-20",
-    updateAt: "2020-07-20"
+    updateAt: "2020-07-20",
+    disabled: true,
   },
   {
     id: 8,
@@ -75,7 +82,8 @@ let link: ILink[] = [
     linkKey: "NNr96e",
     href: "https://github.com/fourstring/url-shortener-frontend",
     createAt: "2020-07-20",
-    updateAt: "2020-07-20"
+    updateAt: "2020-07-20",
+    disabled: true,
   },
   {
     id: 9,
@@ -83,7 +91,8 @@ let link: ILink[] = [
     linkKey: "A7PKCQ",
     href: "https://nimo.sjtu.edu.cn/",
     createAt: "2020-07-20",
-    updateAt: "2020-07-20"
+    updateAt: "2020-07-20",
+    disabled: true,
   },
   {
     id: 10,
@@ -91,7 +100,8 @@ let link: ILink[] = [
     linkKey: "NNr96e",
     href: "https://github.com/fourstring/url-shortener-frontend",
     createAt: "2020-07-20",
-    updateAt: "2020-07-20"
+    updateAt: "2020-07-20",
+    disabled: true,
   },
 ];
 
