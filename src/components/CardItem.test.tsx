@@ -4,7 +4,7 @@ import {link} from "../mocks/mockDb";
 import {List} from "@material-ui/core";
 import {render} from "@testing-library/react";
 import {testLinkService} from "../mocks/testClient";
-
+import {getByDeepText} from "../utils/getByDeepText";
 
 /*
 * 检测 ListItem
@@ -16,7 +16,7 @@ describe("ListItem test", () => {
     const {getByText} = render(
         <CardItem item={link[0]}/>
     );
-    expect(getByText(`${testLinkService.buildShortenLink(link[0].linkKey)}`)).toBeInTheDocument();
-    expect(getByText(`${link[0].href}`)).toBeInTheDocument();
+    expect(getByDeepText(`${testLinkService.buildShortenLink(link[0].linkKey)}`)).toBeInTheDocument();
+    expect(getByDeepText(`${link[0].href}`)).toBeInTheDocument();
   })
 })
