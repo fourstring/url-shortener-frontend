@@ -18,5 +18,7 @@ describe("list e2e test", ()=>{
     cy.contains('string');
     cy.contains('//api.fourstring.dev');
     cy.contains('删除');
+    cy.contains('复制短链接');
+    cy.contains('复制长链接');
   })
 })

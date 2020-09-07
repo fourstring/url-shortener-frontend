@@ -1,10 +1,10 @@
 import React from "react";
-import {ListItem} from "./ListItem"
+import {CardItem} from "./CardItem"
 import {link} from "../mocks/mockDb";
 import {List} from "@material-ui/core";
 import {render} from "@testing-library/react";
 import {testLinkService} from "../mocks/testClient";
-
+import {getByDeepText} from "../utils/getByDeepText";
 
 /*
 * 检测 ListItem
@@ -14,10 +14,8 @@ import {testLinkService} from "../mocks/testClient";
 describe("ListItem test", () => {
   it('should render components correctly', async () => {
     const {getByText} = render(
-      <List>
-        <ListItem item={link[0]}/>
-      </List>
+        <CardItem item={link[0]}/>
     );
-    expect(getByText(`${testLinkService.buildShortenLink(link[0].linkKey)}`)).toBeInTheDocument();
+
   })
 })
