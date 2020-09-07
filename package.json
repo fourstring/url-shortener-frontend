@@ -115,7 +115,11 @@
       "!src/**/*.d.ts",
       "!src/mocks/*",
       "!src/utils/validation_schemas/*",
-      "!src/config.ts"
+      "!src/config.ts",
+      "!src/index.tsx",
+      "!src/components/datatable/*",
+      "!src/components/dialog/*",
+      "!src/views/LinksAdminView.tsx"
     ],
     "setupFiles": [
       "jest-localstorage-mock",
@@ -136,8 +140,7 @@
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$",
-      "<rootDir>/src/index.tsx"
+      "^.+\\.module\\.(css|sass|scss)$"
     ],
     "modulePaths": [],
     "moduleNameMapper": {
