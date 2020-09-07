@@ -65,7 +65,7 @@ export class AuthService {
       let result = await this.client.post('/auth/change_password', profile);
       return result.status === 200;
     } catch (e) {
-      if (e.isAxiosError && e.response.status === 400) {
+      if (e.isAxiosError && e.response.status === 403) {
         return false;
       }
       throw e;

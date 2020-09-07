@@ -1,6 +1,6 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import {testPagedData, testAdmin, testUser, testLink} from "./testData";
+import {testAdmin, testLink, testPagedData, testUser} from "./testData";
 import {linkDb} from './mockDb'
 import {ILink} from "../types/ILink";
 
@@ -36,7 +36,7 @@ testAdapter.onPost(baseURL + '/auth/change_password', {original: '88888888', new
 });
 
 testAdapter.onPost(baseURL + '/auth/change_password', {original: '123123123', new: "11111111"}).reply(config => {
-  return [400]
+  return [403]
 });
 
 testAdapter.onPost('/links', {user: 1, href: "test.com"}).reply(() => {
