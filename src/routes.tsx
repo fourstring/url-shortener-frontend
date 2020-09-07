@@ -6,9 +6,45 @@ import {LoginView} from "./views/LoginView";
 import {LogoutView} from "./views/LogoutView";
 import {RegisterView} from "./views/RegisterView";
 import {Redirect} from "react-router-dom";
+import {AnalysisView} from "./views/admin/AnalysisView";
+import {StatisticView} from "./views/admin/StatisticView";
+import {ChangePassWordView} from "./views/ChangePasswordView";
 import {LinksAdminView} from "./views/LinksAdminView";
 
 export const routes: IRoute[] = [
+  {
+    path: '/admin',
+    subRoutes: [
+      {
+        path: '/analysis',
+        component: <AnalysisView/>,
+        metadata: {
+          displayText: "数据分析",
+          display: true,
+          adminOnly: true
+        }
+      },
+      {
+        path: '/statistic',
+        component: <StatisticView/>,
+        metadata: {
+          displayText: "访问统计",
+          display: true,
+          adminOnly: true
+        }
+      },
+      {
+        path: '/links',
+        component: <LinksAdminView/>,
+        metadata: {
+          displayText: "短链接管理",
+          display: true,
+          authenticatedOnly: true,
+          adminOnly: true,
+        }
+      },
+    ]
+  },
   {
     path: '/shorten',
     component: <ShortenView/>,
@@ -29,16 +65,6 @@ export const routes: IRoute[] = [
         }
       }
     ]
-  },
-  {
-    path: '/admin',
-    component: <LinksAdminView/>,
-    metadata: {
-      displayText: "短链接管理",
-      display: true,
-      authenticatedOnly: true,
-      adminOnly: true,
-    }
   },
   {
     path: '/login',
@@ -63,6 +89,14 @@ export const routes: IRoute[] = [
       displayText: "注册",
       display: true,
       anonymousOnly: true
+    }
+  },
+  {
+    path: '/changePassword',
+    component: <ChangePassWordView/>,
+    metadata: {
+      displayText: "修改密码",
+      display: false
     }
   },
   {

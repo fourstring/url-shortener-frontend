@@ -1,8 +1,10 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import {testPagedData, testUser, testLink} from "./testData";
+import {testPagedData, testAdmin, testUser, testLink} from "./testData";
 import {linkDb} from './mockDb'
 import {ILink} from "../types/ILink";
+
+const jwt = require('jsonwebtoken');
 
 const baseURL: string = 'http://localhost:8080';
 
@@ -22,7 +24,19 @@ testAdapter.onGet(baseURL + '/auth/logout').reply(config => {
 });
 
 testAdapter.onPost(baseURL + '/auth/login').reply(config => {
+  const data = JSON.parse(config.data);
+  if (data.username === 'admin') {
+    return [200, {user: testAdmin, accessToken: "justTestToken", csrfToken: "justTestToken"}]
+  }
   return [200, {user: testUser, accessToken: "justTestToken", csrfToken: "justTestToken"}]
+});
+
+testAdapter.onPost(baseURL + '/auth/change_password', {original: '88888888', new: "11111111"}).reply(config => {
+  return [200]
+});
+
+testAdapter.onPost(baseURL + '/auth/change_password', {original: '123123123', new: "11111111"}).reply(config => {
+  return [400]
 });
 
 testAdapter.onPost('/links', {user: 1, href: "test.com"}).reply(() => {

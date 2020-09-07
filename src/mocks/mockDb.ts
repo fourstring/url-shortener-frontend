@@ -1,15 +1,15 @@
 import {IUser} from "../types/IUser";
 import {ILink} from "../types/ILink";
 
-function fillDb<T extends any>(db: Map<number, T>, key: string = "id") {
+function fillDb<T extends Record<string, any>>(db: Map<number, T>, key: string = "id") {
   return (value: T) => db.set(value[key] as number, value);
 }
 
 let user: IUser[] = [
-  {id: 1, username: 'test1', email: 'test@test.com'},
-  {id: 2, username: 'test2', email: 'test@test2.com'},
-  {id: 3, username: 'test3', email: 'test@test3.com'},
-  {id: 4, username: 'admin', email: 'admin@test.com'}
+  {id: 1, username: 'test1', email: 'test@test.com', admin: false},
+  {id: 2, username: 'test2', email: 'test@test2.com', admin: false},
+  {id: 3, username: 'test3', email: 'test@test3.com', admin: false},
+  {id: 4, username: 'admin', email: 'admin@test.com', admin: true}
 ];
 
 let link: ILink[] = [

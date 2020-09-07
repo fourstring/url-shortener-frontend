@@ -4,6 +4,8 @@
 * 其中未登录和已登录部分需要和login界面代码整合使用
 * @author lzl
 */
+// @ts-ignore
+const cy = Cypress.cy;
 describe('Test shorten function', function () {
 
   /*
@@ -81,5 +83,7 @@ describe('Test shorten function when login', function () {
     cy.url()
       .should('eq', Cypress.config().baseUrl + '/links');
   })
+
+
 
 });

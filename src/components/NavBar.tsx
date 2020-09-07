@@ -45,8 +45,11 @@ export function NavBar() {
       if (value.anonymousOnly) {
         if (user) return false;
       }
-      if(value.authenticatedOnly){
+      if (value.authenticatedOnly) {
         if (!user) return false;
+      }
+      if (value.adminOnly) {
+        return user?.admin;
       }
       return true;
     };

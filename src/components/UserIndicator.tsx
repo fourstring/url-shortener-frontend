@@ -41,6 +41,11 @@ export function UserIndicator(props: React.PropsWithoutRef<{ user: IUser | null 
             我的信息
           </MenuItem>
           <MenuItem
+            onClick={() => history.replace("/changePassword")}
+          >
+            修改密码
+          </MenuItem>
+          <MenuItem
             onClick={() => history.replace("/logout")}
           >
             退出登陆
