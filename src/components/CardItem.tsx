@@ -39,7 +39,7 @@ export function CardItem(props: React.PropsWithoutRef<{ item: ILink }>) {
               短链接: {linkService.buildShortenLink(item.linkKey)}
               </Typography>
               <Typography variant="body2" style={{marginTop:5}}>
-              长链接: {item.linkKey}
+              长链接: {item.href}
               </Typography>
               <Button style={{marginTop:20}} variant="contained" color="primary" size="small"
               onClick={() => {
