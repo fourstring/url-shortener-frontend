@@ -17,6 +17,6 @@ describe("ListItem test", () => {
         <CardItem item={link[0]}/>
     );
     expect(getByText(`${testLinkService.buildShortenLink(link[0].linkKey)}`)).toBeInTheDocument();
-    expect(getByText(`${link[0].href}`))
+    expect(getByText(`${link[0].href}`)).toBeInTheDocument();
   })
 })
