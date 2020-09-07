@@ -69,7 +69,7 @@ describe('Test shorter button', () => {
       fireEvent.click(getByDeepText('生成短链接'));
     })
     await sleep(3000);
-    expect(getByDeepText(`短链接 : ${testLinkService.buildShortenLink('abcdefg')}`)).toBeInTheDocument();
+    expect(getByDeepText(`短链接 : ${testLinkService.buildShortenLink('linkKey')}`)).toBeInTheDocument();
   });
 });
 

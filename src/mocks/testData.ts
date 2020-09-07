@@ -13,10 +13,11 @@ export const testAdmin: IUser = {id: 2, username: 'admin', email: 'admin@test.co
 export const testLink: ILink = {
   id: 1,
   user: testUser,
-  linkKey: "string",
-  href: "string",
-  createAt: "string",
-  updateAt: "string"
+  linkKey: "linkKey",
+  href: "href",
+  createAt: "createAt",
+  updateAt: "updateAt",
+  disabled: false
 };
 
 export const testLinkList: ILink[] = [

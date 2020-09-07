@@ -9,6 +9,7 @@ import {Redirect} from "react-router-dom";
 import {AnalysisView} from "./views/admin/AnalysisView";
 import {StatisticView} from "./views/admin/StatisticView";
 import {ChangePassWordView} from "./views/ChangePasswordView";
+import {LinksAdminView} from "./views/admin/LinksAdminView";
 
 export const routes: IRoute[] = [
   {
@@ -31,7 +32,16 @@ export const routes: IRoute[] = [
           display: true,
           adminOnly: true
         }
-      }
+      },
+      {
+        path: '/links',
+        component: <LinksAdminView/>,
+        metadata: {
+          displayText: "短链接管理",
+          display: true,
+          adminOnly: true,
+        }
+      },
     ]
   },
   {
