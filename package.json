@@ -120,7 +120,9 @@
       "!src/index.tsx",
       "!src/components/datatable/*",
       "!src/components/dialog/*",
-      "!src/views/LinksAdminView.tsx"
+      "!src/components/admin/*",
+      "!src/views/admin/**",
+      "!src/views/ChangePasswordView.tsx"
     ],
     "setupFiles": [
       "jest-localstorage-mock",

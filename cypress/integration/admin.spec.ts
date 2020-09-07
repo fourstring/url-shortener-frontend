@@ -10,7 +10,7 @@ describe("AdminList e2e test", ()=>{
     // login first
     cy.visit('/login')
     cy.get('[placeholder="请输入用户名"]')
-      .type('username')
+      .type('admin')
     cy.get('[placeholder="请输入密码"]')
       .type('12345678')
     cy.get('button').contains('登陆')
