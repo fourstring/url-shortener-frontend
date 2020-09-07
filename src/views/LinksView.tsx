@@ -1,5 +1,5 @@
-import React, {useContext} from "react";
-import {Button, CircularProgress, createStyles, Divider, Grid, makeStyles, Paper, Theme} from "@material-ui/core";
+import React from "react";
+import {Button, CircularProgress, createStyles, Grid, makeStyles, Paper, Theme} from "@material-ui/core";
 import {CardItem} from "../components/CardItem"
 import {useEntities} from "../hooks/useEntities";
 import {ILink, ILinkInput} from "../types/ILink";
@@ -63,20 +63,19 @@ export function LinksView() {
       }}>{(data, paginator) => {
         let list: JSX.Element[] = [];
         data.forEach((value, key) => list.push(
-          <Grid item xs={12} key={key}>
-            <div style={{margin: 'auto', width: '50%', height: 500, marginTop: 20}}>
+          <Grid item container justify={"center"} xs={12} key={key}>
+            <div style={{margin: 20, width: '50%'}}>
               <div className={classes.listItem}>
                 <CardItem item={value}/>
                 <Button style={{position: "absolute", right: 50, top: 40}} id="delete"
                         color="secondary" variant="contained" onClick={() => handleDelete(value.id)}
                 >删除</Button>
               </div>
-              <Divider variant="inset" component="li"/>
             </div>
           </Grid>));
         return (
           <>
-            <Grid container>
+            <Grid container justify={"center"}>
               {list.length === 0 ?
                 <Paper className={classes.text}>
                   <h3 style={{margin: "auto"}}>您的短链接列表为空</h3>

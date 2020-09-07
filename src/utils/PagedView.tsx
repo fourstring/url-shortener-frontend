@@ -14,7 +14,7 @@ export function PagedView<T extends IEntity, InputT = T>(props: React.PropsWithC
   const [page, setPage] = useState(1); // Pagination component is 1-indexed.
   const {entities, error, loading, count: pageInfo} = useEntities<T, InputT>(props.dataSource, {
     page: page,
-    size:10,
+    size: 10,
     ...props.filter
   });
   const paginator = <Pagination showFirstButton
